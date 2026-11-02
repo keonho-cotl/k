@@ -1,0 +1,89 @@
+{
+  // ===== FONT: SF Mono + fallback + Apple Color Emoji =====
+  "editor.fontFamily": "'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', 'Apple Color Emoji', 'Segoe UI Emoji', monospace",
+  "editor.fontSize": 13,
+  "editor.fontWeight": "400",
+  "editor.lineHeight": 1.65,
+  "editor.fontLigatures": false,
+  "editor.letterSpacing": 0,
+
+  "terminal.integrated.fontFamily": "'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', 'Apple Color Emoji', 'Segoe UI Emoji', monospace",
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.lineHeight": 1.25,
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.smoothScrolling": true,
+
+  "debug.console.fontFamily": "'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Apple Color Emoji', monospace",
+  "markdown.preview.fontFamily": "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Apple Color Emoji', sans-serif",
+
+  // ===== TEMA & IKON (install ekstensinya dulu) =====
+  "workbench.colorTheme": "GitHub Dark Default",
+  "workbench.preferredDarkColorTheme": "GitHub Dark Default",
+  "workbench.preferredLightColorTheme": "GitHub Light Default",
+  "window.autoDetectColorScheme": true,
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.productIconTheme": "Default",
+
+  // Aksen biru iOS (#0A84FF) di atas tema GitHub
+  "workbench.colorCustomizations": {
+    "[GitHub Dark Default]": {
+      "focusBorder": "#0A84FF",
+      "button.background": "#0A84FF",
+      "button.hoverBackground": "#409CFF",
+      "progressBar.background": "#0A84FF",
+      "editorCursor.foreground": "#0A84FF",
+      "activityBar.activeBorder": "#0A84FF",
+      "activityBarBadge.background": "#0A84FF",
+      "badge.background": "#0A84FF",
+      "textLink.foreground": "#409CFF",
+      "tab.activeBorderTop": "#0A84FF"
+    },
+    "[GitHub Light Default]": {
+      "focusBorder": "#007AFF",
+      "button.background": "#007AFF",
+      "button.hoverBackground": "#0A84FF",
+      "progressBar.background": "#007AFF",
+      "editorCursor.foreground": "#007AFF",
+      "activityBar.activeBorder": "#007AFF",
+      "activityBarBadge.background": "#007AFF",
+      "badge.background": "#007AFF",
+      "textLink.foreground": "#007AFF",
+      "tab.activeBorderTop": "#007AFF"
+    }
+  },
+
+  // ===== TAMPILAN BERSIH & MINIMALIS ala iOS =====
+  "window.titleBarStyle": "custom",
+  "window.commandCenter": true,
+  "workbench.startupEditor": "none",
+  "workbench.tips.enabled": false,
+  "workbench.tree.indent": 16,
+  "workbench.tree.renderIndentGuides": "onHover",
+  "workbench.list.smoothScrolling": true,
+  "workbench.editor.tabActionCloseVisibility": true,
+  "workbench.editor.highlightModifiedTabs": true,
+  "breadcrumbs.enabled": true,
+  "explorer.compactFolders": false,
+
+  "editor.minimap.enabled": false,
+  "editor.padding.top": 12,
+  "editor.padding.bottom": 12,
+  "editor.renderLineHighlight": "gutter",
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.smoothScrolling": true,
+  "editor.roundedSelection": true,
+  "editor.guides.indentation": true,
+  "editor.guides.bracketPairs": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.overviewRulerBorder": false,
+  "editor.hideCursorInOverviewRuler": true,
+  "editor.scrollbar.verticalScrollbarSize": 10,
+  "editor.scrollbar.horizontalScrollbarSize": 10,
+  "editor.wordWrap": "on",
+  "editor.lineNumbers": "on",
+
+  "files.autoSave": "onFocusChange",
+  "files.trimTrailingWhitespace": true
+}

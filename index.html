@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>COTL — Kaca Latihan</title>
+<style>
+:root{--bg:#000;--panel:#14161b;--line:#262a33;--txt:#eceef2;--dim:#8a909c;--me:#2f6f5e;--you:#22252d}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;color:var(--txt);font-family:-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+#phone{position:relative;width:100%;max-width:430px;height:100%;margin:0 auto;background:var(--bg);overflow:hidden}
+.screen{position:absolute;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.screen.on{display:flex}
+.status{display:flex;justify-content:space-between;padding:10px 22px 4px;font-size:13px;font-weight:600}
+/* lock */
+
+#lock{background:radial-gradient(ellipse at 50% 20%,#1b2330,#05070a 70%);align-items:center;text-align:center}
+#lock .clock{font-size:84px;font-weight:300;margin-top:60px;letter-spacing:-2px}
+#lock .date{color:var(--dim);margin-top:-4px}
+.notif{margin:auto 14px 24px;align-self:stretch;background:rgba(40,44,54,.85);border-radius:18px;padding:12px 14px;text-align:left;animation:pop .5s .6s both;cursor:pointer}
+.notif b{font-size:14px}.notif p{font-size:14px;color:#cfd3da;margin-top:2px}
+.swipe{color:var(--dim);font-size:13px;margin-bottom:26px;animation:pulse 2s infinite}
+@keyframes pop{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+@keyframes pulse{50%{opacity:.35}}
+
+/*spotify*/
+#music{background:#0f0f0f}
+#mscroll{flex:1;overflow-y:auto;padding-bottom:150px}
+.sp-top{padding:10px 18px 18px;background:linear-gradient(var(--spc,#555),#121212)}
+.sp-back{background:none;border:0;padding:8px 4px;display:block;cursor:pointer}
+.sp-cover{width:200px;height:200px;margin:6px auto 18px;background:#333 center/cover no-repeat;box-shadow:0 10px 30px rgba(0,0,0,.5);border-radius:6px}
+.sp-type{font-size:13px;font-weight:500}
+.sp-title{font-size:30px;font-weight:800;line-height:1.1;margin:4px 0 8px;letter-spacing:-.02em}
+.sp-desc{color:#b3b3b3;font-size:13px}
+.sp-by{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;font-weight:600}
+.sp-av{width:24px;height:24px;border-radius:50%;background:#6b4c2a center/cover;flex:none}
+.sp-meta{color:#b3b3b3;font-size:13px;margin-top:4px}
+.sp-act{display:flex;align-items:center;gap:22px;padding:14px 18px}
+.sp-pl{width:56px;height:56px;border-radius:50%;background:#fff;border:0;display:grid;place-items:center;cursor:pointer;flex:none}
+.sp-hd{display:grid;grid-template-columns:22px 1fr auto;gap:12px;padding:6px 18px;color:#b3b3b3;font-size:13px;border-bottom:1px solid #2a2a2a;margin-bottom:6px;align-items:center}
+.sp-hd span:nth-child(2){margin-left:56px}
+.sp-row{display:grid;grid-template-columns:22px 44px 1fr auto;gap:12px;align-items:center;padding:6px 18px;cursor:pointer}
+.sp-n{color:#b3b3b3;text-align:center;font-size:15px}
+.sp-img{width:44px;height:44px;background:#333 center/cover no-repeat;border-radius:3px}
+.sp-tt{min-width:0}
+.sp-tt b{display:block;font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-tt small{display:block;color:#b3b3b3;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.sp-d{color:#b3b3b3;font-size:13px}
+.sp-row.on .sp-tt b,.sp-row.on .sp-n{color:#ff4e45}
+.sp-mini{display:none;position:absolute;left:8px;right:8px;bottom:44px;border-radius:8px;background:#3a2f35;padding:8px 10px 9px;z-index:6}
+.sp-mini.on{display:block}
+.sp-mm{display:flex;align-items:center;gap:10px}
+.sp-mi{width:38px;height:38px;border-radius:4px;background:#333 center/cover no-repeat;flex:none}
+.sp-mt{flex:1;min-width:0}
+.sp-mt b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-mt small{display:block;color:#c9c0c5;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-mb{background:none;border:0;padding:4px;cursor:pointer;display:grid;place-items:center}
+.sp-mp{height:3px;border-radius:2px;background:rgba(255,255,255,.25);margin-top:8px;overflow:hidden}
+.sp-mp i{display:block;height:100%;width:0;background:#fff}
+/* chat */
+#chat header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+#chat header .av{width:34px;height:34px;border-radius:50%;background:#33415c;display:grid;place-items:center;font-size:15px}
+#chat header small{display:block;color:var(--dim);font-size:11px}
+#msgs{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:78%;padding:8px 12px;border-radius:16px;font-size:15px;line-height:1.35;animation:pop .25s both}
+.m .n{display:block;font-size:11px;color:var(--dim);margin-bottom:2px}
+.m.you{align-self:flex-start;background:var(--you);border-bottom-left-radius:4px}
+.m.me{align-self:flex-end;background:var(--me);border-bottom-right-radius:4px}
+.m.sys{align-self:center;background:none;color:var(--dim);font-size:12px}
+.vid{width:210px;height:120px;border-radius:12px;background:linear-gradient(135deg,#1c2733,#0a0d12);position:relative;cursor:pointer;display:grid;place-items:center;margin-top:4px}
+.vid i{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-style:normal}
+.vid span{position:absolute;left:8px;bottom:6px;font-size:11px;color:#cbd}
+.typing{align-self:flex-start;color:var(--dim);font-size:12px;padding-left:6px}
+.bar{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:var(--panel)}
+.bar div{flex:1;background:#0c0e12;border-radius:20px;padding:9px 14px;color:var(--dim);font-size:14px}
+/* player */
+#player{background:#000}
+#player .top{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;font-size:14px}
+#player .top button{background:none;border:0;color:var(--txt);font-size:15px;padding:6px}
+#stage{flex:1;position:relative;overflow:hidden;display:grid;place-items:center}
+canvas{width:100%;height:auto;max-height:100%;background:#0b0c10;transition:transform .35s;touch-action:manipulation}
+canvas.zoom{transform:scale(2.4)}
+.rec{position:absolute;top:10px;left:14px;font-size:12px;color:#ff5a5a;font-variant-numeric:tabular-nums;pointer-events:none}
+.ctrl{display:flex;align-items:center;gap:12px;padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+.ctrl button{width:40px;height:40px;border-radius:50%;border:0;background:#262a33;color:#fff;font-size:16px}
+.ctrl input{flex:1;accent-color:#9fb8ff}
+.ctrl span{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
+.hint{position:absolute;bottom:8px;width:100%;text-align:center;font-size:11px;color:#667;pointer-events:none}
+/* finale */
+#end{background:#000;align-items:center;justify-content:center;text-align:center;padding:30px}
+#end .t{font-size:17px;color:var(--dim);min-height:50px}
+#face{position:absolute;left:50%;top:50%;width:140px;height:190px;margin:-95px 0 0 -70px;border-radius:50% 50% 46% 46%;background:#d9dde2;opacity:0;filter:blur(1px);transform:scale(.25)}
+#face::before,#face::after{content:"";position:absolute;top:70px;width:20px;height:44px;border-radius:50%;background:#000}
+#face::before{left:34px}#face::after{right:34px}
+#face.in{opacity:.5;transform:scale(.45);transition:opacity 4s,transform 5s linear}
+#face.boom{opacity:1;transform:scale(9);transition:transform .12s ease-in,opacity .05s}
+#end.shake{animation:sh .06s infinite}
+@keyframes sh{0%{transform:translate(4px,-3px)}50%{transform:translate(-5px,4px)}100%{transform:translate(3px,3px)}}
+#fin{position:absolute;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:#000;padding:30px;z-index:3}
+#fin h1{font-size:26px;line-height:1.3;color:#e9eaee;font-weight:600}
+#fin p{color:var(--dim);font-size:14px}
+#fin button{background:none;border:1px solid #444;color:#ccc;border-radius:20px;padding:10px 22px;font-size:14px}
+#fin.on{display:flex}
+@media (prefers-reduced-motion:reduce){#end.shake{animation:none}.swipe{animation:none}}
+
+/* pass */
+#pass{background:radial-gradient(ellipse at 50% 10%,#1b2330,#05070a 75%);align-items:center}
+.ptitle{margin-top:46px;font-size:18px}
+.dots{display:flex;gap:18px;margin:26px 0 34px}
+.dots i{width:14px;height:14px;border-radius:50%;border:1.5px solid #fff}
+.dots i.f{background:#fff}
+.dots.bad{animation:sh2 .5s}
+@keyframes sh2{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.keys{display:grid;grid-template-columns:repeat(3,76px);gap:16px 22px}
+.keys button{width:76px;height:76px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:30px;font-weight:300}
+.keys button.e{background:none;pointer-events:none}
+.keys button:active{background:rgba(255,255,255,.35)}
+.pfoot{display:flex;justify-content:space-between;width:100%;padding:26px 44px;margin-top:auto;font-size:14px;color:#cfd3da}
+.pfoot span+span{cursor:pointer}
+/* home */
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 8px;padding:34px 18px;align-content:start}
+.app{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;background:none;border:0;color:var(--txt);position:relative}
+.app .ic{width:58px;height:58px;border-radius:14px;display:grid;place-items:center;font-size:30px;background:linear-gradient(145deg,#2b3140,#171a22)}
+.app .bdg{position:absolute;top:-4px;right:8px;background:#e5484d;border-radius:10px;min-width:20px;height:20px;font-size:12px;display:grid;place-items:center}
+.hd{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--line);background:var(--panel)}
+.hd b{font-size:16px}.hd button{background:none;border:0;color:#9fb8ff;font-size:22px;padding:2px 8px;min-width:36px}
+#chat header .bk{background:none;border:0;color:#9fb8ff;font-size:26px;padding:0 4px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;overflow-y:auto;flex:1;align-content:start}
+.cell{min-height:110px;height:calc((100vw - 4px)/3);max-height:145px;background-size:cover;background-position:center;display:grid;place-items:center;font-size:11px;color:#778;cursor:pointer}
+.prof{padding:14px 16px;display:flex;align-items:center;gap:18px}
+.prof .pf{width:72px;height:72px;border-radius:50%;background:conic-gradient(#6b7cff,#b05cff,#ff6b9a,#6b7cff);display:grid;place-items:center;font-size:30px}
+.stat{display:flex;gap:20px;text-align:center;font-size:12px;color:var(--dim)}.stat b{display:block;color:var(--txt);font-size:16px}
+.bio{padding:0 16px 10px;font-size:13px;line-height:1.4}.bio b{display:block}
+.btns{display:flex;gap:8px;padding:0 16px 12px}.btns div{flex:1;text-align:center;background:#262a33;border-radius:8px;padding:7px;font-size:13px}
+#info .body{padding:16px;display:flex;flex-direction:column;gap:12px;overflow-y:auto}
+#info .it{background:var(--panel);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.45}
+#info .it small{display:block;color:var(--dim);font-size:11px;margin-bottom:2px}
+#viewer{position:absolute;top:0;left:0;right:0;bottom:0;background:#000;display:none;align-items:center;justify-content:center;z-index:5;text-align:center;padding:24px;color:var(--dim);font-size:14px;line-height:1.5}
+#viewer.on{display:flex}#viewer img{max-width:100%;max-height:100%}
+
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif}
+.lt{font-size:32px;font-weight:700;padding:6px 18px 8px}
+.srch{margin:0 16px 8px;background:#1c1c1e;border-radius:10px;padding:8px 12px;color:#8e8e93;font-size:15px}
+#rows{overflow-y:auto;flex:1}
+.row{display:flex;gap:12px;padding:10px 16px;align-items:center;border-bottom:.5px solid #1f1f22;cursor:pointer}
+.av2{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-size:21px;font-weight:600;color:#fff;flex:none}
+.av2.sm{width:36px;height:36px;font-size:15px}
+.rt{flex:1;min-width:0}.rt b{font-size:16px;font-weight:600}
+.rt p{color:#8e8e93;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.rm{align-self:flex-start;font-size:12px;color:#8e8e93;text-align:right;min-width:40px}
+.ub{width:12px;height:12px;border-radius:50%;background:#0a84ff;display:block;margin:6px 0 0 auto}
+#chat header.ch{justify-content:space-between;background:rgba(28,28,30,.96);border-bottom:.5px solid #2a2a2d}
+.ctr{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:12px}
+.ctr small{color:#8e8e93;font-size:11px;min-height:13px}
+#chat header .bk{font-size:18px;color:#0a84ff;white-space:nowrap}
+.thr{display:none;flex-direction:column;gap:6px}.thr.on{display:flex}
+.m{font-size:16px;border-radius:19px}
+.m.you{background:#262628;border-bottom-left-radius:5px}
+.m.me{background:#0a84ff;border-bottom-right-radius:5px}
+.m img,.m video{display:block;max-width:100%;border-radius:12px;margin-top:4px}
+.ph{width:200px;height:130px;border-radius:12px;background:#17181c;border:1px dashed #444;display:grid;place-items:center;font-size:11px;color:#778;text-align:center;padding:8px;margin-top:4px}
+.bar{background:#1c1c1e;border-top:.5px solid #2a2a2d;align-items:center;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))}
+.bar .plus{width:32px;height:32px;border-radius:50%;background:#2c2c2e;display:grid;place-items:center;color:#aaa;font-size:20px;flex:none}
+.bar input{flex:1;background:#000;border:1px solid #3a3a3c;border-radius:18px;padding:8px 14px;color:#fff;font:inherit;font-size:16px;outline:none;min-width:0}
+.bar button{width:32px;height:32px;border-radius:50%;border:0;background:#0a84ff;color:#fff;font-size:18px;font-weight:700;flex:none}
+.bar button:disabled{background:#2c2c2e;color:#555}
+.bar button:not(:disabled){animation:pulse2 1.4s infinite}
+@keyframes pulse2{50%{box-shadow:0 0 0 6px rgba(10,132,255,.25)}}
+
+/* ===== iPhone polish ===== */
+.status{padding:14px 30px 6px;font-size:15px;font-weight:600;align-items:center}
+.sr{display:flex;gap:6px;align-items:center}.sr b{font-size:13px;font-weight:600}
+#phone::before{content:"";display:none;position:absolute;top:10px;left:50%;width:112px;height:32px;margin-left:-56px;background:#000;border-radius:20px;z-index:30;pointer-events:none}
+@media (min-width:500px){#phone::before{display:block}#phone{border-radius:44px;box-shadow:0 0 0 2px #2a2a2e}}
+#hbar{position:absolute;left:0;right:0;bottom:0;height:26px;z-index:25;display:flex;justify-content:center;align-items:flex-end;padding-bottom:8px;pointer-events:none}
+#hbar i{width:136px;height:5px;border-radius:3px;background:#fff;opacity:.85}
+#hbar.act{pointer-events:auto;cursor:pointer}
+.chev{color:#0a84ff;flex:none}
+.hd{background:rgba(28,28,30,.92);backdrop-filter:blur(18px);border-bottom:.5px solid #2a2a2d}
+.hd button{display:flex;align-items:center;gap:4px;font-size:17px;color:#0a84ff;min-width:70px;padding:2px 4px}
+.hd b{font-size:17px;font-weight:600}
+#chat header .bk{display:flex;align-items:center;gap:5px;min-width:52px}
+#chat header .bk span{font-size:17px}
+.lh{display:flex;justify-content:space-between;align-items:center;padding:2px 18px;color:#0a84ff;font-size:17px}
+.lt{padding-top:2px}
+.ctrl,.bar{margin-bottom:12px}
+#lock .lk{display:flex;justify-content:space-between;width:100%;padding:0 42px 44px}
+#lock .lk i{width:50px;height:50px;border-radius:50%;background:rgba(60,60,67,.6);display:grid;place-items:center;font-style:normal;font-size:20px}
+#home{background:linear-gradient(165deg,#1d2f57,#4a2b63 55%,#15171f)}
+.apps{padding:24px 18px 0}
+.app{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.app .ic{width:60px;height:60px;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.pdots{margin-top:auto;display:flex;gap:7px;justify-content:center;padding-bottom:14px}
+.pdots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35)}.pdots i.on{background:#fff}
+.dock{display:flex;justify-content:space-around;margin:0 12px 36px;padding:14px 8px;border-radius:32px;background:rgba(255,255,255,.2);backdrop-filter:blur(22px)}
+.dock .app{font-size:0}
+.pf{width:80px;height:80px;padding:3px}
+.pfi{width:100%;height:100%;border-radius:50%;border:3px solid #000;display:grid;place-items:center;background:#222;background-size:cover;background-position:center;font-size:30px}
+.av2{background-size:cover;background-position:center}
+
+body,button,input{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,"Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em}
+img.emo{height:1.15em;width:1.15em;vertical-align:-.2em;display:inline-block;margin:0 .03em}
+.app .ic{overflow:hidden;display:block}
+.ic svg{width:100%;height:100%;display:block}
+.ic svg text{font-family:-apple-system,BlinkMacSystemFont,Inter,sans-serif}
+#hbar{left:50%;right:auto;width:190px;margin-left:-95px;height:22px;padding-bottom:6px}
+#errb{position:absolute;left:0;right:0;top:0;z-index:99;background:#b00020;color:#fff;font-size:11px;padding:6px 10px;display:none;white-space:pre-wrap}
+
+#call{background:radial-gradient(ellipse at 50% 0%,#38332f,#0b0b0d 70%);align-items:center;text-align:center}
+.kname{font-size:34px;font-weight:500;margin-top:70px;padding:0 20px}
+.kstate{color:#c7c7cc;font-size:17px;margin-top:6px}
+.kcap{margin:36px 26px 0;min-height:96px;font-size:20px;font-style:italic;color:#ececee;line-height:1.4;transition:opacity .4s}
+.kgrid{display:none;grid-template-columns:repeat(3,76px);gap:16px 28px;margin:auto 0 22px}
+.kgrid div{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.17);display:grid;place-items:center;font-size:12px;color:#fff}
+.kring{display:flex;justify-content:space-around;width:100%;padding:0 40px 84px;margin-top:auto}
+.kring>div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px}
+.kring button,.kendb{width:72px;height:72px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer}
+.rej{background:#ff3b30}.acc{background:#34c759}
+.rej svg{transform:rotate(135deg)}
+.kring .acc{animation:pulse3 1.1s infinite}
+@keyframes pulse3{50%{box-shadow:0 0 0 12px rgba(52,199,89,.22)}}
+.kend{display:none;margin-bottom:84px}
+#call.live .kring{display:none}
+.kring .acc.dis{pointer-events:none;opacity:.45;animation:none}
+#call.live .kgrid{display:grid}
+#call.live .kend{display:block}
+
+/* ===== galeri gaya iOS 26 ===== */
+#photos{background:#fff;color:#000}
+#photos .status{color:#000}
+#photos .status [fill="#fff"]{fill:#000}
+#photos .status [stroke="#fff"]{stroke:#000}
+#photos .chev{color:#000}
+.pscroll{flex:1;overflow-y:auto;padding-bottom:120px}
+.ph-top{display:flex;justify-content:space-between;padding:6px 14px 0}
+.glass{display:flex;align-items:center;gap:6px;border:0;border-radius:24px;padding:10px 16px 10px 12px;background:rgba(244,244,248,.9);box-shadow:0 1px 10px rgba(0,0,0,.13);color:#000;font-size:16px;font-weight:500;cursor:pointer}
+.glass.sq{padding:8px 15px;font-size:22px;line-height:1}
+.ph-h{font-size:34px;font-weight:700;padding:18px 20px 0;color:#000}
+.ph-year{font-size:18px;font-weight:700;padding:26px 26px 12px;color:#000}
+#photos .grid{overflow:visible;flex:none;gap:2px}
+#photos .cell{height:auto;aspect-ratio:1;max-height:none;min-height:0}
+.ptab{position:absolute;left:18px;right:18px;bottom:30px;height:64px;border-radius:34px;background:rgba(236,236,241,.88);backdrop-filter:blur(20px);box-shadow:0 4px 26px rgba(0,0,0,.22);display:flex;padding:5px;z-index:6}
+.ptab div{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:30px;font-size:13px;color:#8e8e93;font-weight:600}
+.ptab div.on{background:rgba(255,255,255,.95);color:#222}
+#hbar.dk i{background:#000}
+/* ===== layar utama gaya iOS 26 ===== */
+.wid{display:flex;gap:14px;padding:12px 18px 0}
+.w{flex:1;height:108px;border-radius:24px;padding:12px 14px;cursor:pointer;text-align:left}
+.w-cal{background:linear-gradient(#fff,#e9eef5);color:#000}
+.w-cal small{display:block;color:#ff3b30;font-size:13px;font-weight:600}
+.w-cal b{display:block;font-size:46px;font-weight:300;line-height:1.1;margin-top:2px}
+.w-wx{background:linear-gradient(#6a93c9,#41679c);color:#fff;font-size:12px}
+.w-wx .wt{font-weight:600;font-size:13px}
+.w-wx .wdeg{font-size:34px;font-weight:300;line-height:1.1}
+.w-wx .wd{font-weight:600;margin-top:4px}
+.w-wx .wh{opacity:.85;margin-top:1px}
+.srchp{margin:auto auto 14px;display:flex;align-items:center;gap:6px;padding:9px 22px;border-radius:22px;background:rgba(40,40,46,.7);backdrop-filter:blur(14px);font-size:13px;color:#fff;font-weight:500}
+.apps{padding:20px 18px 0}
+.app .bdg{font-size:12px;color:#fff;font-weight:600}
+.dock{background:rgba(28,28,32,.55);margin-bottom:30px}
+.fl{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border-radius:12px;padding:8px 10px;margin-top:4px}
+.fi{width:38px;height:38px;border-radius:8px;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:11px;font-weight:700}
+.ft b{display:block;font-size:14px;font-weight:600}
+.ft small{font-size:11px;opacity:.7}
+#nbn{position:absolute;left:10px;right:10px;top:52px;z-index:40;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:22px;background:rgba(44,44,50,.94);backdrop-filter:blur(22px);box-shadow:0 8px 28px rgba(0,0,0,.45);color:#fff;cursor:pointer;transform:translateY(-160px);opacity:0;transition:transform .38s cubic-bezier(.2,.9,.3,1.1),opacity .25s}
+#nbn.on{transform:none;opacity:1}
+#nbn .nav{width:38px;height:38px;font-size:16px}
+#nbn .nbd{flex:1;min-width:0}
+#nbn b{display:block;font-size:14px;font-weight:600}
+#nbn p{font-size:14px;color:#d6d6dc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+#nbn .nt{font-size:11px;color:#9a9aa2;align-self:flex-start}
+#kb{height:0;overflow:hidden;background:#1c1c1e;transition:height .3s ease;flex:none}
+#chat.kbon #kb{height:268px}
+#chat.kbon .bar{margin-bottom:0;padding-bottom:8px}
+#cin.typing{border-color:#0a84ff}
+.kbi{padding:10px 3px 0}
+.kbr{display:flex;justify-content:center;gap:6px;margin-bottom:11px}
+.kk{position:relative;flex:1;min-width:0;max-width:37px;height:42px;border-radius:6px;background:#5b5b60;color:#fff;font-size:21px;display:grid;place-items:center;box-shadow:0 1px 0 #000;user-select:none}
+.kk.sp{background:#3b3b40;font-size:15px;max-width:none}
+.kk.w{flex:1.45}
+.kk.space{flex:5;font-size:15px}
+.kk.ret{flex:2.2}
+.kk.press{background:#8d8d93;transform:translateY(1px)}
+.kk.press[data-k]::after{content:attr(data-k);position:absolute;bottom:46px;left:50%;transform:translateX(-50%);width:44px;height:54px;border-radius:10px;background:#8d8d93;color:#fff;font-size:30px;display:grid;place-items:center;box-shadow:0 2px 10px rgba(0,0,0,.5);z-index:5}
+.kk.space.press::after,.kk.sp.press::after{display:none}
+
+
+/* ===== YT Music: halaman artis ===== */
+#music{background:#000}
+#music .status{position:absolute;top:0;left:0;right:0;z-index:4;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+#mscroll{padding-bottom:190px}
+.yt-hero{position:relative;height:430px;background:linear-gradient(#2c3a2c,#111) center top/cover no-repeat}
+.yt-hero::after{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(transparent 45%,rgba(0,0,0,.55) 72%,#000 100%)}
+.yt-hero>*{z-index:1}
+.yt-back{position:absolute;top:56px;left:14px;background:none;border:0;cursor:pointer}
+.yt-tr{position:absolute;top:56px;right:16px;display:flex;gap:20px}
+.yt-name{position:absolute;left:20px;bottom:58px;font-size:40px;font-weight:700;letter-spacing:-.02em}
+.yt-aud{position:absolute;left:20px;bottom:28px;color:#b3b3b3;font-size:14px}
+.yt-act{display:flex;align-items:center;gap:20px;padding:4px 20px 24px}
+.yt-sp{flex:1}
+.yt-sub{background:#f1f1f1;color:#000;border:0;border-radius:24px;padding:12px 22px;font-size:15px;cursor:pointer}
+.yt-sub b{font-weight:600}
+#music .sp-pl{width:64px;height:64px;background:#f1f1f1}
+.yt-sec{display:flex;justify-content:space-between;align-items:center;padding:6px 20px 12px}
+.yt-sec h2{font-size:22px;font-weight:700}
+.yt-sec button{background:none;border:1px solid #555;color:#fff;border-radius:18px;padding:8px 15px;font-size:14px;cursor:pointer}
+#music .sp-row{grid-template-columns:58px 1fr 28px;gap:14px;padding:8px 20px}
+#music .sp-img{width:58px;height:58px;border-radius:4px}
+#music .sp-tt b{font-size:16px;font-weight:500;color:#fff}
+#music .sp-tt small{display:flex;align-items:center;gap:6px;font-size:14px;margin-top:3px}
+#music .sp-row.on .sp-tt b{color:#ff4e45}
+#music .sp-mini{left:0;right:0;bottom:74px;border-radius:0;background:#212121;padding:8px 16px 0}
+#music .sp-mi{width:52px;height:52px;border-radius:3px}
+#music .sp-mt b{font-size:16px;font-weight:500}
+#music .sp-mt small{font-size:15px;color:#aaa}
+#music .sp-mp{height:2px;margin:8px -16px 0;border-radius:0}
+.yt-cast{display:grid;place-items:center;margin-right:10px}
+.yt-nav{position:absolute;left:0;right:0;bottom:0;height:74px;background:#0f0f0f;border-top:.5px solid #222;display:flex;justify-content:space-around;padding:8px 6px 22px;z-index:7}
+.yt-nav div{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:#fff}
+
+/* ===== layar transisi "malamnya" ===== */
+#cut{position:absolute;top:0;left:0;right:0;bottom:0;z-index:60;background:#000;display:flex;align-items:center;justify-content:center;color:#cfd3da;font-size:22px;letter-spacing:.06em;opacity:0;pointer-events:none;transition:opacity .9s ease}
+#cut.on{opacity:1;pointer-events:auto}
+/* kedip lampu + bubble pesan suara */
+#flk{position:absolute;top:0;left:0;right:0;bottom:0;z-index:58;background:#000;opacity:0;pointer-events:none}
+.vn{display:flex;align-items:center;gap:10px;min-width:200px;padding:2px 0}
+.vn .vp{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.95);border:0;display:grid;place-items:center;flex:none;cursor:pointer}
+.vn .vw{flex:1;display:flex;align-items:center;gap:2px;height:26px}
+.vn .vw i{width:3px;border-radius:2px;background:rgba(255,255,255,.45);display:block}
+.vn .vw i.on{background:#fff}
+.vn .vt{font-size:12px;opacity:.9;font-variant-numeric:tabular-nums;min-width:30px;text-align:right}
+</style>
+</head>
+<body>
+<div id="phone">
+
+<section class="screen on" id="lock" onclick="if(!window.__ok){document.getElementById('lock').className='screen';document.getElementById('pass').className='screen on'}">
+  <div class="status"><span>Kenho</span><span>5G ▮▮▮</span></div>
+  <div class="clock" id="lclock">09:12</div>
+  <div class="date" id="ldate">Sabtu, 24 Oktober</div>
+  <div class="notif" id="notif"><b id="nt">COTL</b><p id="nb">Martin: pagi guys! jgn lupa latihan nanti malem ya</p></div>
+  <div class="swipe" id="lswipe">ketuk notifikasi untuk membuka</div>
+  <div class="lk"><i>🔦</i><i>📷</i></div>
+</section>
+
+<section class="screen" id="clist">
+  <div class="status"><span>09:12</span><span>5G ▮▮▮</span></div>
+  <div class="lh"><span id="ledit">Edit</span><span>✎</span></div>
+  <div class="lt" id="ltitle">Pesan</div>
+  <div class="srch" id="lsearch">🔍 Cari</div>
+  <div id="rows"></div>
+</section>
+
+<section class="screen" id="chat">
+  <div class="status"><span>09:12</span><span>5G ▮▮▮</span></div>
+  <header class="ch"><button class="bk" id="cback"><svg class="chev" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2L2 10l8 8" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="cub"></span></button><div class="ctr"><div class="av2 sm" id="cav"></div><b id="cname"></b><small id="csub"></small></div><span style="width:52px"></span></header>
+  <div id="msgs"></div>
+  <div class="bar"><span class="plus">＋</span><input id="cin" readonly placeholder="iMessage"><button id="csend" disabled>↑</button></div>
+  <div id="kb"></div>
+</section>
+
+
+<section class="screen" id="pass">
+  <div class="status"><span>Kenho</span><span>5G ▮▮▮</span></div>
+  <div class="ptitle" id="ptitle">Masukkan Kode</div>
+  <div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>
+  <div class="keys" id="keys"></div>
+  <div class="pfoot"><span id="pemerg">Darurat</span><span id="pcancel">Batal</span></div>
+</section>
+
+<section class="screen" id="home">
+  <div class="status"><span>09:12</span><span>5G ▮▮▮</span></div>
+  <div class="wid">
+    <div class="w w-cal" id="wcal"><small id="wcalD">Sabtu</small><b id="wcalN">24</b></div>
+    <div class="w w-wx" id="wwx"><div class="wt">Cuaca ➚</div><div class="wdeg">28°</div><div class="wd">Cerah berawan</div><div class="wh">H:31° L:25°</div></div>
+  </div>
+  <div class="apps" id="apps"></div>
+  <div class="srchp" id="hsearch"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><circle cx="10.500" cy="10.500" r="6.500"/><path d="M16 16l5 5"/></svg>Search</div>
+  <div class="dock" id="dock"></div>
+</section>
+
+<section class="screen" id="photos">
+  <div class="status"><span>09:12</span><span>5G ▮▮▮</span></div>
+  <div class="pscroll">
+    <div class="ph-top"><button class="glass" data-go="home"><svg class="chev" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2L2 10l8 8" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="bl">Beranda</span></button><button class="glass sq" id="padd">＋</button></div>
+    <h1 class="ph-h" id="tphotos">Library</h1>
+    <div class="ph-year">2026</div>
+    <div class="grid" id="pgrid"></div>
+  </div>
+  <div class="ptab"><div class="on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5-5 4 4 3-3 4 4"/></svg>Library</div><div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>Collections</div></div>
+</section>
+
+<section class="screen" id="insta">
+  <div class="status"><span>09:12</span><span>5G ▮▮▮</span></div>
+  <div class="hd"><button data-go="home"><svg class="chev" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2L2 10l8 8" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="bl">Beranda</span></button><b id="iuser"></b><button id="iadd">＋</button></div>
+  <div class="prof"><!-- PFP INSTAGRAM: ganti lewat PFP.ig di script -->
+  <div class="pf"><div class="pfi" id="ipfp">🪞</div></div><div class="stat"><div><b id="ipc">0</b>posts</div><div><b id="ifo"></b>followers</div><div><b id="ifg"></b>following</div></div></div>
+  <div class="bio"><b id="iname"></b><span id="ibio"></span></div>
+  <div class="btns"><div>Edit profile</div><div>Share profile</div></div>
+  <div class="grid" id="igrid"></div>
+</section>
+
+<section class="screen" id="info">
+  <div class="status"><span>09:12</span><span>5G ▮▮▮</span></div>
+  <div class="hd"><button data-go="home"><svg class="chev" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2L2 10l8 8" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="bl">Beranda</span></button><b id="ititle"></b><span style="width:70px"></span></div>
+  <div class="body" id="ibody"></div>
+</section>
+
+<div id="sphost" style="position:absolute;left:-1000px;top:0;width:220px;height:220px;overflow:hidden"><div id="spembed"></div></div>
+<div id="viewer"></div>
+<input type="file" id="fpick" accept="image/*" multiple hidden>
+
+<section class="screen" id="music">
+  <div class="status"><span>09:12</span><span>5G ▮▮▮</span></div>
+  <div id="mscroll"></div>
+  <div class="sp-mini" id="spmini"></div>
+  <div class="yt-nav"><div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Beranda</div><div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M4 6l7 6-7 6zM13 6l7 6-7 6z"/></svg>Sampel</div><div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><circle cx="10.500" cy="10.500" r="6.500"/><path d="M16 16l5 5"/></svg>Telusuri</div><div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Koleksi</div><div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9.500"/><circle cx="12" cy="12" r="6"/><path d="M10.500 9.500v5l4-2.500z" fill="#fff"/></svg>Upgrade</div></div>
+</section>
+
+<section class="screen" id="player">
+  <div class="top"><button id="back">‹ Kembali</button><span id="vtitle"></span><span style="width:60px"></span></div>
+  <div id="stage"><canvas id="cv" width="360" height="480"></canvas><video id="rv" playsinline controls style="display:none;width:100%;max-height:100%;background:#000"></video><div class="rec" id="rec"></div><div class="hint" id="phint">ketuk video untuk zoom · geser untuk maju/mundur</div></div>
+  <div class="ctrl"><button id="pp">❚❚</button><input type="range" id="sk" min="0" max="1000" value="0"><span id="tm">0:00</span></div>
+</section>
+
+<section class="screen" id="call">
+  <div class="status"></div>
+  <div class="kname" id="kname"></div>
+  <div class="kstate" id="kstate"></div>
+  <div class="kcap" id="kcap"></div>
+  <div class="kgrid" id="kgrid"></div>
+  <div class="kring"><div><button class="rej" id="krej"><svg viewBox="0 0 24 24" width="32" height="32" fill="#fff"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button><span id="krejl"></span></div><div><button class="acc" id="kacc"><svg viewBox="0 0 24 24" width="32" height="32" fill="#fff"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button><span id="kaccl"></span></div></div>
+  <div class="kend"><button class="rej kendb" id="kendb"><svg viewBox="0 0 24 24" width="32" height="32" fill="#fff"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button></div>
+</section>
+
+<section class="screen" id="end">
+  <div id="face"></div><img id="jimg" alt="" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:2">
+  <div class="t" id="endt"></div>
+  <div id="fin"><h1 id="fh"></h1><p id="fp"></p><button id="again">Mulai dari awal</button></div>
+  <video id="jvid" playsinline preload="auto" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:2;background:#000"></video>
+</section>
+
+<div id="errb"></div>
+<div id="cut"></div>
+<div id="flk"></div>
+<script>
+window.onerror=function(m,u,l){var b=document.getElementById('errb');if(b){b.style.display='block';b.textContent='Error: '+m+' (baris '+l+')'}};
+</script>
+<noscript><div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:99;background:#b00020;color:#fff;padding:60px 20px;font-size:16px">JavaScript tidak jalan di tempat kamu membuka file ini, jadi tidak ada yang bisa diklik. Buka lewat Live Server di VS Code, atau Chrome/Safari langsung. Jangan lewat preview di chat.</div></noscript>
+<div id="nbn"><div class="av2 nav"></div><div class="nbd"><b></b><p></p></div><span class="nt">sekarang</span></div>
+<div id="hbar"><i></i></div>
+</div>
+<script>
+/* ====== EDIT DI SINI ====== */
+const NAMES = ['Juhoon','sean','James','Martin'];   // 4 member yang kelihatan di video
+const ME = 'Keonho';                                 // pemilik HP (yang merekam)
+/* ====== FOTO PROFIL (PFP): GANTI PATH DI BAWAH INI ======
+   Taruh fotonya di folder yang sama lalu samakan nama filenya. Kalau file tidak ada, tampil huruf awal nama. */
+const PFP = {
+  martin:   'martin.jpeg',
+  james:    'james.jpeg',
+  juhoon:   'juhoon.jpeg',
+  sean:     'sean.jpeg',
+  group:    'cotl.jpeg',
+  ig:       'keonho.jpg'          // PFP profil Instagram
+};
+/* ====== VIDEO CERMIN (3 video di chat) ======
+   Kosongkan ('') untuk pakai animasi bawaan. Isi path mp4 untuk pakai videomu sendiri.
+   Urutan: [video 1, video 2, video 3]. */
+const REAL_VIDEOS = ['m.mp4', '', ''];
+
+/* ====== JUMPSCARE & ENDING ====== */
+const JUMPSCARE = { video:'j.mp4' };   // contoh: { img:'jumpscare.jpg', sound:'jumpscare.mp3' }
+const FINALE_TEXT = [
+  'jadi siapa yang bener? aku harus percaya siapa sekarang?',
+  'bang james masih di sampingku...',
+  'dia belum nengok sama sekali.'
+];
+const ENDING_TITLE = 'Itu bukan james, kamu sudah ditipu oleh dia.';
+const ENDING_SUB   = 'Juhoon: no bangun';
+const WALLPAPER = { lock:'dut.jpeg', home:'sh.jpg' };   // kosongkan ('') untuk pakai warna bawaan
+const PASSCODE = '1808';
+const CUT_SOUND = { src:'jk.mp3', volume:.8, fadeOut:1.2 };
+
+/* ====== SUARA LAMPU (adegan "ada yang mainin lampu") ======
+   Diputar otomatis setelah james kirim foto di grup, lalu jadi isi VN yang keonho kirim ke sean (pemain bisa ketuk play).
+   src  = file audio di folder yang sama. Kosongkan ('') atau kalau filenya tidak ada, otomatis pakai suara buatan.
+   dur  = panjang suara dalam detik (samakan dengan filemu).
+   flash = kapan layar berkedip gelap [mulai, selesai] dalam detik. flicker:false untuk mematikan kedip layar. */
+/* ====== TELEPON DARI SEAN (keonho tidak bisa angkat, hanya bisa tolak) ======
+   ringSeconds = berapa detik berdering sebelum berhenti sendiri kalau pemain tidak menekan Tolak. */
+const SEAN_CALL = { ringSeconds:14 };
+
+const LAMP = { src:'lampu.mp3', volume:.9, dur:3, flicker:true,
+  flash:[[.3,.45],[.7,.8],[1.0,1.5],[1.9,2.0],[2.1,2.2],[2.5,2.9]] };
+/* ====== TELEPON DARI HANTU (muncul sekali, setelah chat terakhir, sebelum jumpscare) ====== */
+const CALL = {
+  enabled:true, name:'Unknown', incomingText:'panggilan masuk…', acceptLabel:'Terima', declineLabel:'Tolak',
+  declinedText:'Panggilan ini tidak mau ditolak…', liveText:'tersambung', endText:'Panggilan terputus',
+  ringSeconds:20, duration:24, sound:'suara.mp3', canDecline:false,
+  lines:[
+    [2,'jangan takut'],
+    [5,'kamu disini aman'],
+    [8,'mereka bukan teman teman kamu'],
+    [12,'teman teman kamu ada di pintu itu'],
+    [16,'sekarang kamu masuk pintu itu']
+  ],
+  buttons:['mute','keypad','speaker','tambah','FaceTime','kontak']
+};
+
+/* ====== SEMUA TEKS TAMPILAN ====== */
+const TEXT = {
+  statusTime:'09:12',            // jam di status bar (awal = pagi; berubah jadi 02:13 setelah layar "malamnya")
+  clock:'09:12', date:'Sabtu, 24 Oktober',          // layar kunci
+  notifTitle:'COTL', notifBody:'Martin: pagi guys! jgn lupa latihan nanti malem ya',
+  swipeHint:'ketuk notifikasi untuk membuka',
+  passTitle:'Masukkan Kode', passWrong:'Kode salah', passEmergency:'Darurat', passCancel:'Batal',
+  listEdit:'Edit', listTitle:'Pesan', listSearch:'🔍 Cari', rowTime:'09:12',
+  inputPlaceholder:'iMessage', typing:'sedang mengetik…', chatDay:'Minggu 02:13',
+  back:'Beranda', photosTitle:'Library',
+  playerHint:'ketuk video untuk zoom · geser untuk maju/mundur',
+  videoTitles:['video_01.mp4','video_02.mp4','video_03.mp4'],
+  rec:'● REC', recHour:'11',
+  emptyPhoto:'Foto kosong. Tambahkan lewat tombol ＋ atau isi daftar PHOTOS',
+  again:'Mulai dari awal',
+  apps:{Pesan:'Pesan',Foto:'Foto',Instagram:'Instagram',Notes:'Notes',Kalender:'Kalender',Maps:'Maps',Files:'Files',Gmail:'Gmail',Kamera:'Kamera',Jam:'Jam',Cuaca:'Cuaca',Pengaturan:'Pengaturan',Spotify:'YT Music'}
+};
+
+/* ====== ISI APP LAIN ====== */
+const INFO = {
+ Notes:{t:'Notes',items:[['Hari ini','Latihan 14.00, ruang B. Manajer minta kain penutup cermin jangan dilepas, tapi kainnya sudah jatuh waktu aku datang.'],['Kemarin','Kenapa bayanganku selalu gerak duluan?']]},
+ Kalender:{t:'Kalender',items:[['Hari ini 14.00','Latihan · Ruang B'],['Hari ini 23.00','Tidak ada acara'],['Besok','Ruang B ditutup untuk renovasi']]},
+ Maps:{t:'Maps',items:[['Terbaru','Ruang Latihan B · Lt. 4 · 3,4 km'],['Disimpan','Rumah · Dorm · Nectar Studio 1,2 km']]},
+ Files:{t:'Files',items:[['On My iPhone','video_01.mp4, video_02.mp4, video_03.mp4'],['video_03.mp4','Dibuat 23.01. Kamu tidak ingat merekamnya.']]},
+ Kamera:{t:'Kamera',items:[['Tidak bisa dibuka','Kamera depan terbuka sendiri 3 kali malam ini.']]},
+ Jam:{t:'Jam',items:[['Alarm','02:13: dimatikan oleh kamu. Kamu tidak ingat mematikannya.']]},
+ Cuaca:{t:'Cuaca',items:[['Jakarta','Cerah berawan. Terasa lebih dingin di dalam ruangan.']]},
+ Pengaturan:{t:'Pengaturan',items:[['Layar','Kunci otomatis: Tidak pernah'],['Privasi','Kamera: diakses 3 kali (02:09, 02:11, 02:13)']]},
+ Gmail:{t:'Gmail',items:[['Manajemen','Ruang B dikunci mulai besok. Tolong jangan masuk sendirian.'],['(tanpa nama)','Cerminnya sudah kamu lihat belakangan ini?']]}
+};
+
+/* ====== ISI CHAT ======
+   {w:'Nama', t:'teks'}     = pesan masuk
+   {me:'teks'}               = balasan kamu (tinggal tekan kirim)
+   {w:'Nama', img:'x.png'}   = foto masuk
+   {w:'Nama', vid:0}         = video rekaman cermin (0,1,2)
+   {sys:'teks'}              = keterangan kecil di tengah
+   {cut:'teks'}              = layar gelap + tulisan (pindah waktu), jam berubah jadi 02:13
+   {...}              = riwayat lama, langsung tampil tanpa notif */
+const [A,B,C,D] = NAMES;
+const CHATS = [
+ {id:'martin', name:D, color:'#3b6fd8', stage:0, script:[
+   {w:D,t:'dut'},
+   {w:D,t:'lu udah makan belom?'},
+   {me:'belom bang wkwk, tadi cuma ngemil doang'},
+   {w:D,t:'yaelah, entar maag lu kambuh. eh btw, lu masih lama?'},
+   {me:'ga sih bang dikit lagi, kenapa?'},
+   {w:D,t:'berarti lu masih di ruang latihan?'},
+   {me:'iya bang, gue masih latihan sendiri, ditemenin bang james doang, bagian kaki yg tadi dibilang coach kurang, jadi gue ulang'},
+   {w:D,t:'oh iya, tadi gue yg suruh lu ulang sampe rapi. tapi jangan kemaleman ya'},
+   {w:D,t:'btw ada video latihan tadi dari coach, itu pake hp lu kan buat ngerekam?'},
+   {me:'iya bang, gue taro di tripod, gue blm sempet liat'},
+   {w:D,t:'liat deh, ada yg aneh di cerminnya'},
+   {w:D,t:'|video latihan|'},
+   {me:'kenapa bang? gue ga liat apa apa kok'},
+
+   {next:'juhoon'},
+   /* lanjutan: baru muncul setelah chat sean selesai (stage 3) */
+   {wait:3,w:D,t:'dut.. kamu dimana? gue sama sean udh di bawah pohon, lu kok ga ada?'},
+   {me:'bang aku di depan kalian... aku udh teriak dari tadi'},
+   {w:D,t:'sumpah jangan bercanda sekarang no, gue sama sean udh kelilingi ini pohon tapi ga ada apa apa'},
+   {w:D,img:'pohon.jpg'},
+   {end:true}
+ ]},
+ {id:'group', name:'COTL', group:true, color:'#6a4fb3', stage:0, day:'Sabtu 09:12', dayClock:'09:12', script:[
+   {w:D,t:'pagi guys! jgn lupa latihan nanti malem ya'},
+   {w:D,t:'ini penting banget, buat comeback kita nanti, jangan ada yg telat.'},
+   {w:A,t:'siap bang, kumpulnya di ruang B kan?'},
+   {w:D,t:'iya ruang B. coach juga dateng buat ngecek koreonya'},
+   {w:B,t:'oke. bagian gue masih belum rapi sih wkwk'},
+   {w:C,t:'sama, nanti kita ulang bareng aja'},
+   {me:'siap, gue dateng duluan nanti'},
+   {w:D,t:'mantap. semangat semuanya, kita harus tampil maksimal'},
+   {w:D,t:'oh iya, latihannya nanti direkam buat eval ya'},
+   {cut:'malamnya'},
+   {sys:TEXT.chatDay,clock:'02:13'},
+   {w:B,t:'guys gue ngantuk banget, ini udah jam 2 lebih wkwk'},
+   {w:A,t:'gue laper, ada yg mau nitip ga? gue mau turun ke minimarket'},
+   {w:B,t:'bukannya masih ada ramen di laci atas?'},
+   {w:D,t:'udah gue makan wkwkwk'},
+   {w:B,t:'dasar, nitip es krim aja deh bang'},
+   {w:A,t:'oke, eh bentar, lampu ruang B kok masih nyala terus ya? gue liat dari jendela dorm'},
+   {w:B,t:'kayaknya keonho, tadi gue liat dia masi disana'},
+   {w:C,img:'latihan.png',t:'ini keonho masi bareng gue'},
+   {lamp:true},                       // suara + kedip lampu
+   {next:'sean',delay:1500},          // keonho langsung chat sean
+   {waitFor:'lamp1',delay:2500},      // grup lanjut setelah chat sean (bagian lampu) selesai
+   {w:A,t:'kalian ber tiga ya?'},
+   {me:'hah apasih bang, jangan takutin gue deh'},
+   {w:B,t:'itu siapa yang di dekat cermin?'},
+   {w:C,t:'ga ada kok, kita cuman berdua aja, kalian salah liat kali'},
+   {w:D,t:'udah ges mungkin itu jaketnya bang james'},
+   {next:'james'}
+ ]},
+ {id:'james', name:C, color:'#c2557a', stage:1, script:[
+   {w:C,t:'no, jangan pikirin yang di grup ya, itu mereka bercanda aja'},
+   {me:'iya bang, gue juga ga pikirin itu gue cuman mau cepet cepet ketemu kasur wkwkw'},
+   {w:C,t:'nanti kita pulang lewat jalan belakang ya, lewat pohon dekat rumah tua itu'},
+   {me:'hah? itu kan jauh bang, lewat depan aja kan lebih deket'},
+   {w:C,t:'sekalian kita mampir ke supermarket, gue laper banget'},
+   {me:'oh iya, gue juga mau beli susu strawberry'},
+   {next:'martin'}
+ ]},
+ {id:'juhoon', name:A, color:'#2f9d73', stage:2, script:[
+   {w:A,t:'no. yakin lu berdua sama bang james itu? gue tadi baru sampe dorm liat bang james nonton anime di kamar...'},
+   {me:'hah? tapi dia jalan di sebelah gue sekarang bang'},
+   {me:'tapi emang bang james agak diem aja dari tadi, mungkin lagi kurang enak badan?'},
+   {w:A,t:'berhenti jangan lanjut jalan, jangan nengok dia, gue chat sean'},
+   {next:'sean'}
+ ]},
+ {id:'sean', name:B, color:'#d38a2c', stage:2, script:[
+   /* bagian 1: lampu (muncul setelah james kirim foto di grup) */
+   {me:'se, lampu ruang B kedip kedip sendiri dari tadi. nih aku rekam, denger deh', nudge:'📝 Ketuk untuk menulis pesan'},
+   {mine:true, vn:true},
+   {w:B,t:'bentar, gue dengerin'},
+   {pause:3500},
+   {w:B,t:'itu suara apaan no...'},
+   {w:B,t:'lu masih di ruang B? sama siapa?'},
+   {me:'sama bang james se, katanya paling korslet doang'},
+   {w:B,t:'yaudah, tapi kabarin gue kalo udah keluar ya'},
+   {set:'lamp1'},
+   {hold:true},                       // diam sampai chat juhoon memanggil sean
+   /* bagian 2: chat sean yang lama */
+   {w:B,t:'NO, LARI! ITU BUKAN BANG JAMES!'},
+   {me:'ada apa sean... aku takut..'},
+   {me:'tadi bang jju juga chat aku.... dia bilang hal yang sama'},
+   {w:B,t:'KEONHO, KAMU HARUS LARI SEKARANG! TINGGALIN SOSOK YANG DISAMPING KAMU'},
+   /* sean nelpon 3 kali + spam chat cepat. keonho tidak bisa angkat, hanya bisa tolak */
+   {pause:900},
+   {call:true},
+   {w:B,t:'angkat no',fast:true},
+   {w:B,t:'angakat',fast:true},
+   {call:true},
+   {w:B,t:'tinggalin yg di samping kmu',fast:true},
+   {w:B,t:'lari no',fast:true},
+   {call:true},
+   {w:B,t:'KAMU DIMANA? AKU SAMA BANG MARTIN MAU SUSUL KAMU SEKARANG'},
+   {me:'se... aku ta-takut... bang james.. liat aku terus ga nengok sama sekali...'},
+   {me:'aku di bawah pohon deket rumah tua itu se... aku takut badan aku ga bisa gerak'},
+   {me:'se... bang james... bukan bukan itu bukan bangg james... se.. kamu di mana'},
+   {w:B,t:'kita udah deket! tungguin kita no!'},
+   {unlock:3}
+ ]}
+];
+
+const SPI=(()=>{
+  const o=(b,c,w)=>'<svg viewBox="0 0 24 24" width="'+(w||26)+'" height="'+(w||26)+'" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+b+'</svg>';
+  const g='#b3b3b3';
+  return {
+    shuf:o('<path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',g),
+    plus:o('<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',g),
+    down:o('<circle cx="12" cy="12" r="9"/><path d="M12 7v8M8.5 12l3.5 3.5 3.5-3.5"/>',g),
+    dots:'<svg viewBox="0 0 24 24" width="26" height="26" fill="'+g+'"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>',
+    clock:o('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',g,18),
+    back:'<svg width="12" height="20" viewBox="0 0 12 20"><path d="M10 2L2 10l8 8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    play:f=>'<svg viewBox="0 0 24 24" width="28" height="28" fill="'+f+'"><path d="M8 5v14l11-7z"/></svg>',
+    pause:f=>'<svg viewBox="0 0 24 24" width="28" height="28" fill="'+f+'"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>'
+  };
+})();
+const au=new Audio(); au.preload='auto'; let spIdx=-1, spPlaying=false, spWant=-1, spBoot=false, spKey='';
+const spImg=(el,src)=>{ if(!src) return; const im=new Image(); im.onload=()=>{ el.style.backgroundImage='url("'+src+'")' }; im.src=src };
+const CASTSVG='<span class="yt-cast"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 8V6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2h-6"/><path d="M3 12a8 8 0 018 8M3 16a4 4 0 014 4"/><circle cx="3.500" cy="20" r=".8" fill="#fff"/></svg></span>';
+function spUi(){
+  const m=$('#spmini'), s=MUSIC.songs[spIdx];
+  $$('.sp-row').forEach((r,i)=>r.classList.toggle('on',i===spIdx));
+  const big=$('#sppl'); if(big) big.innerHTML=(spPlaying?SPI.pause('#000'):SPI.play('#000'));
+  if(!s){ m.classList.remove('on'); m.innerHTML=''; spKey=''; return }
+  m.classList.add('on');
+  const key=spIdx+':'+spPlaying; if(key===spKey) return; spKey=key;
+  m.innerHTML='<div class="sp-mm"><div class="sp-mi"></div><div class="sp-mt"><b></b><small></small></div>'+CASTSVG+'<button class="sp-mb" id="spmb">'+(spPlaying?SPI.pause('#fff'):SPI.play('#fff'))+'</button></div><div class="sp-mp"><i id="sppr"></i></div>';
+  m.querySelector('b').textContent=s.t; m.querySelector('small').textContent=s.a; spImg(m.querySelector('.sp-mi'),s.img||MUSIC.cover);
+  $('#spmb').onclick=spToggle;
+}
+function spLoad(){}
+au.onplay=()=>{ spPlaying=true; spUi() };
+au.onpause=()=>{ if(!au.ended){ spPlaying=false; spUi() } };
+au.onended=()=>spGo((spIdx+1)%MUSIC.songs.length);
+au.onerror=()=>{ spPlaying=false; spUi() };
+au.ontimeupdate=()=>{ const pr=$('#sppr'); if(pr&&au.duration) pr.style.width=Math.min(100,au.currentTime/au.duration*100)+'%' };
+au.onloadedmetadata=()=>{};
+function spGo(i){
+  const s=MUSIC.songs[i];
+  spIdx=i; spPlaying=!!s.src; spKey=''; spUi();
+  if(!s.src) return;
+  au.src=s.src; au.play().catch(()=>{ spPlaying=false; spUi() });
+}
+function spPlay(i){ if(spIdx===i) spToggle(); else spGo(i) }
+function spToggle(){
+  if(spIdx<0){ spGo(0); return }
+  if(au.paused) au.play().catch(()=>{}); else au.pause();
+}
+function renderMusic(){
+  spLoad(); const box=$('#mscroll'); if(box.dataset.ok) return; box.dataset.ok='1';
+  const I=(b,w)=>'<svg viewBox="0 0 24 24" width="'+(w||26)+'" height="'+(w||26)+'" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+b+'</svg>';
+  const OK='<svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#aaa"/><path d="M7 12.500l3.200 3.200L17 9" stroke="#000" stroke-width="2.400" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const DOTS='<svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><circle cx="12" cy="5" r="1.900"/><circle cx="12" cy="12" r="1.900"/><circle cx="12" cy="19" r="1.900"/></svg>';
+  box.innerHTML='<div class="yt-hero" id="yhero"><button class="yt-back" id="spback">'+I('<path d="M19 12H5M11 6l-6 6 6 6"/>',28)+'</button><div class="yt-tr">'+I('<path d="M4 6l7 6-7 6zM13 6l7 6-7 6z"/>')+I('<path d="M14 4l7 6-7 6v-4c-6 0-9 2-11 6 1-6 4-10 11-10z"/>')+'</div><div class="yt-name"></div><div class="yt-aud"></div></div>'
+   +'<div class="yt-act"><button class="yt-sub"><b>Subscribe</b>&nbsp; <span></span></button><span class="yt-sp"></span>'+I('<circle cx="12" cy="12" r="2"/><path d="M8 8a5.700 5.700 0 000 8M16 8a5.700 5.700 0 010 8M5 5a10 10 0 000 14M19 5a10 10 0 010 14"/>',32)+'<button class="sp-pl" id="sppl">'+SPI.play('#000')+'</button></div>'
+   +'<div class="yt-sec"><h2>Lagu teratas</h2><button id="yall">Putar semua</button></div><div id="splist"></div>';
+  box.querySelector('.yt-name').textContent=MUSIC.artist; box.querySelector('.yt-aud').textContent=MUSIC.aud; box.querySelector('.yt-sub span').textContent=MUSIC.subs;
+  spImg($('#yhero'),MUSIC.hero);
+  const list=$('#splist');
+  MUSIC.songs.forEach((s,i)=>{ const r=document.createElement('div'); r.className='sp-row';
+    r.innerHTML='<div class="sp-img"></div><div class="sp-tt"><b></b><small></small></div>'+DOTS;
+    r.querySelector('b').textContent=s.t;
+    const sm=r.querySelector('small'); if(s.v) sm.insertAdjacentHTML('beforeend',OK);
+    const tx=document.createElement('span'); tx.textContent=s.a+(s.plays?' • '+s.plays+' pemutaran':''); sm.append(tx);
+    spImg(r.querySelector('.sp-img'),s.img||MUSIC.cover); r.onclick=()=>spPlay(i); list.append(r) });
+  $('#spback').onclick=()=>show('home'); $('#sppl').onclick=spToggle; $('#yall').onclick=()=>spGo(0);
+}
+function stopMusic(){ try{au.pause()}catch(e){} spIdx=-1; spPlaying=false; spWant=-1; spKey=''; const m=$('#spmini'); if(m){ m.classList.remove('on'); m.innerHTML='' } $$('.sp-row').forEach(r=>r.classList.remove('on')); const b=$('#sppl'); if(b) b.innerHTML=SPI.play('#000') }
+
+
+const PHOTOS = ['1.jpg','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpg','10.jpg','11.jpg','12.jpg','13.jpg','14.jpg','15.jpg'];
+const IG = { user:'ahnkeonho', name:'K', bio:'cookie', followers:'5,2 jt', following:'5',
+             posts:['ig 1.jpg','ig 2.jpg','ig 3.jpg','ig 4.jpg','ig 5.jpg','ig 6.jpg'] };
+/* ========================== */
+
+const MUSIC = {
+  artist: 'CORTIS',
+  aud: '55,2 jt audiens bulanan',
+  subs: '7,6 jt',
+  hero: 'cortis-hero.jpg',       // foto besar di atas halaman artis
+  cover: 'cortis-cover.jpg',      // dipakai kalau lagu tidak punya foto sendiri
+  /* src = file audio (mp3/m4a/wav) di folder yang sama. img = foto kecil lagu (boleh kosong).
+     plays = jumlah pemutaran (boleh kosong). v:1 = tanda centang. */
+  songs: [
+    {t:'REDRED', a:'CORTIS', plays:'291 jt', v:0, img:'cover1.jpg', src:'lagu1.mp3'},
+    {t:'FaSHioN', a:'CORTIS', plays:'199 jt', v:1, img:'cover2.jpg', src:'lagu2.mp3'},
+    {t:'GO!', a:'CORTIS', plays:'168 jt', v:1, img:'cover3.jpg', src:'lagu3.mp3'},
+    {t:'ACAI', a:'CORTIS', plays:'61 jt', v:0, img:'cover4.jpg', src:'lagu4.mp3'},
+    {t:'What You Want', a:'CORTIS', plays:'', v:0, img:'cover5.jpg', src:'lagu5.mp3'}
+  ]
+};
+
+const $ = s => document.querySelector(s);
+const $$ = q => [...document.querySelectorAll(q)];
+const SB='<span class="tm">'+TEXT.statusTime+'</span><span class="sr"><svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><b>5G</b><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="#fff" opacity=".4"/><rect x="2" y="2" width="16" height="9" rx="2" fill="#fff"/><path d="M24 4.5v4c.8-.3 1.5-1.1 1.5-2s-.7-1.7-1.5-2z" fill="#fff" opacity=".5"/></svg></span>';
+$$('.status').forEach(e=>e.innerHTML=SB);
+const setClock=t=>$$('.status .tm').forEach(e=>{ e.textContent=t });
+function setAv(el,id,letter,color){
+  el.style.backgroundImage=''; el.textContent=letter; if(color) el.style.background=color;
+  const src=PFP[id]; if(!src) return;
+  const im=new Image(); im.onload=()=>{ el.style.backgroundImage='url("'+src+'")'; el.style.backgroundSize='cover'; el.style.backgroundPosition='center'; el.textContent='' }; im.src=src;
+}
+let scr='lock', nTimer=null, bgOn=false;
+const screens = ['lock','pass','home','photos','insta','info','clist','chat','player','call','end','music'];
+const show = id => { scr=id; if(id!=='chat') kbShow(false); if(['lock','pass','call','end','player'].includes(id)) $('#nbn').classList.remove('on'); if(id!=='chat') setClock(TEXT.statusTime); if(id!=='music') stopMusic(); screens.forEach(s => $('#'+s).classList.toggle('on', s===id));
+  const h=$('#hbar'); h.classList.toggle('dk',id==='photos'); h.style.display = id==='end'?'none':'flex'; h.classList.toggle('act',['clist','chat','photos','insta','info','music'].includes(id)); };
+
+/* ---------- audio ---------- */
+let AC=null, drone=null;
+function ac(){ if(!AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){} } if(AC&&AC.state==='suspended')AC.resume(); return AC }
+function tone(f,d,type='sine',v=.08){ const a=ac(); if(!a)return; const o=a.createOscillator(),g=a.createGain(); o.type=type;o.frequency.value=f; g.gain.setValueAtTime(v,a.currentTime); g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d); o.connect(g).connect(a.destination); o.start(); o.stop(a.currentTime+d) }
+function ting(){ tone(1568,.45,'sine',.12); setTimeout(()=>tone(2093,.7,'sine',.09),110) }
+function updBadge(){ const b=$('#bdg'); if(b){ const n=unread(); b.textContent=n; b.style.display=n?'grid':'none' } }
+function notify(ch,m){
+  if(['lock','pass','call','end'].includes(scr)) return;
+  const n=$('#nbn'); setAv(n.querySelector('.nav'),ch.id,ch.group?'🪞':ch.name[0],ch.color);
+  n.querySelector('b').textContent=ch.name;
+  n.querySelector('p').textContent=(ch.group&&m.w?m.w+': ':'')+(m.t||(m.img?'📷 Foto':(m.file?'📎 '+m.file:'')));
+  n.classList.add('on'); ting(); buzz([40,30,40]);
+  clearTimeout(nTimer); nTimer=setTimeout(()=>n.classList.remove('on'),4500);
+  n.onclick=()=>{ n.classList.remove('on'); clearTimeout(nTimer); openChat(ch) };
+}
+function startBg(){ if(bgOn) return; bgOn=true; setTimeout(()=>runChat(CHATS.find(c=>c.id==='group')),5000) }
+function blip(){ tone(880,.12); setTimeout(()=>tone(1175,.16),110) }
+function startDrone(){ const a=ac(); if(!a||drone)return; const o=a.createOscillator(),g=a.createGain(); o.type='sawtooth'; o.frequency.value=48; g.gain.value=0; g.gain.linearRampToValueAtTime(.05,a.currentTime+6); o.connect(g).connect(a.destination); o.start(); drone={o,g} }
+function stopDrone(){ if(drone){ try{drone.g.gain.linearRampToValueAtTime(0,AC.currentTime+.3); drone.o.stop(AC.currentTime+.4)}catch(e){} drone=null } }
+function scream(){ const a=ac(); if(!a)return; const len=a.sampleRate*1.2, b=a.createBuffer(1,len,a.sampleRate), d=b.getChannelData(0); for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*(1-i/len); const s=a.createBufferSource(); s.buffer=b; const g=a.createGain(); g.gain.value=.7; s.connect(g).connect(a.destination); s.start(); tone(90,1,'sawtooth',.4) }
+const buzz = p => navigator.vibrate && navigator.vibrate(p);
+
+/* suara layar gelap "malamnya": mulai bersamaan dengan layar menggelap, memudar saat layar terang lagi */
+let cutAudio=null;
+function cutSoundStart(){
+  if(!CUT_SOUND.src) return;
+  try{
+    cutSoundStop(true);
+    const a=new Audio(CUT_SOUND.src);
+    a.volume=Math.max(0,Math.min(1,CUT_SOUND.volume));
+    a.onerror=()=>{ if(cutAudio===a) cutAudio=null };
+    cutAudio=a;
+    const p=a.play(); if(p&&p.catch) p.catch(()=>{ if(cutAudio===a) cutAudio=null });
+  }catch(e){ cutAudio=null }
+}
+function cutSoundStop(now){
+  const a=cutAudio; if(!a) return; cutAudio=null;
+  if(now||!CUT_SOUND.fadeOut){ try{a.pause()}catch(e){} return }
+  const v0=a.volume, steps=12, dt=CUT_SOUND.fadeOut*1000/steps; let k=0;
+  const f=setInterval(()=>{ k++; try{ a.volume=Math.max(0,v0*(1-k/steps)) }catch(e){}
+    if(k>=steps){ clearInterval(f); try{a.pause()}catch(e){} } },dt);
+}
+
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const until=async f=>{ while(!f()) await sleep(200) };
+/* ---------- adegan lampu: suara, kedip, VN ---------- */
+const flags={}; let vnStop=null;
+function sCall(name){            // telepon masuk: tombol terima mati, hanya Tolak yang bisa dipencet
+  return new Promise(res=>{
+    const C=$('#call');
+    C.classList.add('ring'); C.classList.remove('live'); $('#kacc').classList.add('dis');
+    $('#kname').textContent=name; $('#kstate').textContent=CALL.incomingText; $('#kcap').textContent='';
+    $('#krejl').textContent=CALL.declineLabel; $('#kaccl').textContent=CALL.acceptLabel;
+    show('call'); ac();
+    const notes=[659,784,988,784]; let i=0;
+    const ring=setInterval(()=>{ tone(notes[i%4],.24,'sine',.1); i++ },270);
+    const vib=()=>buzz([500,250,500]); vib(); const vi=setInterval(vib,2000);
+    let done=false, auto=null;
+    const fin=(wait)=>{ if(done) return; done=true; clearInterval(ring); clearInterval(vi); clearTimeout(auto);
+      $('#krej').onclick=null; $('#kacc').classList.remove('dis'); setTimeout(res,wait||0) };
+    $('#krej').onclick=()=>{ tone(300,.15,'sawtooth',.08); buzz(30); fin(0) };
+    auto=setTimeout(()=>{ $('#kstate').textContent=CALL.endText; buzz([150,60,150]); fin(900) },SEAN_CALL.ringSeconds*1000);
+  });
+}
+function lampSynth(){            // suara buatan kalau file tidak ada
+  ac(); tone(55,LAMP.dur,'sine',.05);
+  LAMP.flash.forEach(([a,b])=>{
+    setTimeout(()=>{ tone(90,.12,'sawtooth',.10); tone(2600,.025,'square',.06) },a*1000);
+    setTimeout(()=>{ tone(2000,.02,'square',.05) },b*1000);
+  });
+}
+function lampPlay(onend){        // putar suara lampu; return {stop, dur}
+  let a=null, fell=false, ended=false, to=null;
+  const finish=()=>{ if(ended) return; ended=true; clearTimeout(to); if(onend) onend() };
+  const fall=()=>{ if(fell||ended) return; fell=true; a=null; lampSynth(); to=setTimeout(finish,LAMP.dur*1000) };
+  if(LAMP.src){
+    try{
+      a=new Audio(LAMP.src); a.volume=Math.max(0,Math.min(1,LAMP.volume));
+      a.onended=finish; a.onerror=fall;
+      const p=a.play(); if(p&&p.catch) p.catch(fall);
+    }catch(e){ fall() }
+  } else fall();
+  return {
+    stop(){ ended=true; clearTimeout(to); if(a){ try{a.pause()}catch(e){} } },
+    dur(){ return (a&&isFinite(a.duration)&&a.duration>0)?a.duration:LAMP.dur }
+  };
+}
+function lampFlicker(){
+  if(!LAMP.flicker) return;
+  try{ if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches) return }catch(e){}
+  const f=$('#flk');
+  LAMP.flash.forEach(([a,b])=>{
+    setTimeout(()=>{ f.style.opacity=.88 },a*1000);
+    setTimeout(()=>{ f.style.opacity=0 },b*1000);
+  });
+  setTimeout(()=>{ f.style.opacity=0 },(LAMP.dur+.5)*1000);
+}
+async function lampScene(){
+  ac(); lampPlay(); lampFlicker(); buzz([60,40,60,40,120]);
+  await sleep(LAMP.dur*1000+700);
+}
+function vnEl(){                 // bubble pesan suara yang bisa diputar
+  const PLAY='<svg viewBox="0 0 24 24" width="16" height="16" fill="#0a84ff"><path d="M8 5v14l11-7z"/></svg>';
+  const PAUSE='<svg viewBox="0 0 24 24" width="16" height="16" fill="#0a84ff"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+  const w=document.createElement('div'); w.className='vn';
+  w.innerHTML='<button class="vp"></button><div class="vw"></div><span class="vt"></span>';
+  const btn=w.querySelector('.vp'), wave=w.querySelector('.vw'), lab=w.querySelector('.vt');
+  const bars=[]; for(let i=0;i<26;i++){ const b=document.createElement('i'); b.style.height=(5+Math.round(Math.abs(Math.sin(i*1.7)*Math.cos(i*.6))*17))+'px'; wave.append(b); bars.push(b) }
+  const mmss=x=>Math.floor(x/60)+':'+String(Math.floor(x%60)).padStart(2,'0');
+  let h=null, tmr=null, t0=0;
+  function reset(){ clearInterval(tmr); tmr=null; h=null; btn.innerHTML=PLAY; bars.forEach(b=>b.classList.remove('on')); lab.textContent=mmss(LAMP.dur); if(vnStop===stopIt) vnStop=null }
+  function stopIt(){ if(h) h.stop(); reset() }
+  btn.innerHTML=PLAY; lab.textContent=mmss(LAMP.dur);
+  btn.onclick=()=>{
+    if(h){ stopIt(); return }
+    if(vnStop) vnStop();
+    vnStop=stopIt; btn.innerHTML=PAUSE; t0=performance.now(); ac();
+    h=lampPlay(reset);
+    tmr=setInterval(()=>{ const el=(performance.now()-t0)/1000, d=h?h.dur():LAMP.dur, f=Math.min(1,el/d);
+      bars.forEach((b,i)=>b.classList.toggle('on',i/bars.length<f)); lab.textContent=mmss(el) },100);
+  };
+  return w;
+}
+
+let stage=0, curChat=null;
+CHATS.forEach(ch=>{ Object.assign(ch,{pos:0,opened:false,running:false,pending:'',last:''}); ch.el=document.createElement('div'); ch.el.className='thr'; $('#msgs').append(ch.el) });
+const visible=()=>CHATS.filter(c=>c.running||c.started);
+const unread=()=>visible().filter(c=>!c.opened).length;
+/* riwayat (item h:true) langsung tampil tanpa notif */
+CHATS.forEach(ch=>{ if(ch.script[0]&&ch.script[0].h){ addTo(ch,{sys:ch.day||TEXT.chatDay,clock:ch.dayClock||TEXT.statusTime}); while(ch.script[ch.pos]&&ch.script[ch.pos].h){ addTo(ch,ch.script[ch.pos]); ch.pos++ } ch.started=true } });
+
+function mediaEl(kind,src){
+  const w=document.createElement('div');
+  const ph=()=>{ w.innerHTML='<div class="ph">'+(kind==='img'?'Foto':'Video')+' belum ada.<br>Taruh file di: '+src+'</div>' };
+  const e=document.createElement(kind==='img'?'img':'video'); e.src=src; e.onerror=ph;
+  if(kind==='video'){ e.controls=true; e.playsInline=true }
+  else e.onclick=()=>viewImg(src);
+  w.append(e); return w;
+}
+function addTo(ch,m){
+  const e=document.createElement('div');
+  if(m.sys){ e.className='m sys'; e.textContent=m.sys; if(m.clock){ ch.clockNow=m.clock; if(curChat===ch) setClock(m.clock) } }
+  else {
+    const mine=m.me!==undefined||m.mine;
+    e.className='m '+(mine?'me':'you');
+    if(ch.group&&!mine&&m.w){ const n=document.createElement('span'); n.className='n'; n.textContent=m.w; e.append(n) }
+    if(m.t||m.me) e.append(document.createTextNode(m.t||m.me));
+    if(m.img) e.append(mediaEl('img',m.img));
+    if(m.video) e.append(mediaEl('video',m.video));
+    if(m.file){ const f=document.createElement('div'); f.className='fl'; f.innerHTML='<div class="fi">MP4</div><div class="ft"><b></b><small>MP4 · 14,2 MB</small></div>'; f.querySelector('b').textContent=m.file; e.append(f) }
+    if(m.vn) e.append(vnEl());
+    if(m.vid!==undefined){ const v=document.createElement('div'); v.className='vid'; v.innerHTML='<i>▶</i><span>0:'+['10','12','14'][m.vid]+'</span>'; v.onclick=()=>openVideo(m.vid); e.append(v) }
+  }
+  ch.el.append(e);
+  ch.ts=Date.now();
+  ch.last = m.sys?ch.last:(m.t||m.me||(m.vn?'🎤 Pesan suara':(m.img?'📷 Foto':(m.file?'📎 '+m.file:'🎥 Video'))));
+  if(curChat===ch) $('#msgs').scrollTop=$('#msgs').scrollHeight;
+}
+
+/* ---------- keyboard & efek mengetik ---------- */
+const KEYS={};
+(function(){
+  const kb=$('#kb'); const rows=[ 'qwertyuiop','asdfghjkl' ];
+  let h='<div class="kbi">';
+  rows.forEach((r,i)=>{ h+='<div class="kbr" '+(i===1?'style="padding:0 16px"':'')+'>'+[...r].map(c=>'<div class="kk" data-k="'+c+'" data-c="'+c+'">'+c+'</div>').join('')+'</div>' });
+  h+='<div class="kbr"><div class="kk sp w">⇧</div>'+[...'zxcvbnm'].map(c=>'<div class="kk" data-k="'+c+'" data-c="'+c+'">'+c+'</div>').join('')+'<div class="kk sp w">⌫</div></div>';
+  h+='<div class="kbr"><div class="kk sp w">123</div><div class="kk sp">☺</div><div class="kk space" data-c=" ">space</div><div class="kk sp ret">return</div></div></div>';
+  kb.innerHTML=h; kb.querySelectorAll('[data-c]').forEach(e=>{ KEYS[e.dataset.c]=e });
+})();
+function kbShow(on){ $('#chat').classList.toggle('kbon',!!on); if(on) setTimeout(()=>{ $('#msgs').scrollTop=$('#msgs').scrollHeight },330) }
+function pressKey(c){ const el=KEYS[String(c).toLowerCase()]; if(el){ el.classList.add('press'); setTimeout(()=>el.classList.remove('press'),95) } }
+function clickSnd(sp){ tone(sp?850:1850+Math.random()*350,.035,'square',.035) }
+async function typeIn(text,here){
+  kbShow(true); setComposer(''); $('#csend').disabled=true; $('#cin').classList.add('typing');
+  await sleep(500);
+  const d=Math.max(26,Math.min(88,5200/text.length));
+  for(let i=0;i<text.length;i++){
+    if(!here()){ $('#cin').classList.remove('typing'); return false }
+    const c=text[i]; $('#cin').value=text.slice(0,i+1); $('#cin').scrollLeft=1e5;
+    pressKey(c); clickSnd(c===' ');
+    await sleep(d*(0.7+Math.random()*0.6)+(c===' '?25:0)+(/[.,?!]/.test(c)?70:0));
+  }
+  $('#cin').classList.remove('typing'); return true
+}
+
+function setComposer(t){ $('#cin').value=t; $('#csend').disabled=!t }
+
+/* pindah waktu: pagi -> malam (jam, tanggal, widget, ikon kalender) */
+function setNight(){
+  TEXT.statusTime='02:13'; TEXT.rowTime='02:13'; TEXT.clock='02:13'; TEXT.date='Minggu, 25 Oktober';
+  setClock('02:13');
+  const set=(q,t)=>{ const e=$(q); if(e) e.textContent=t };
+  set('#lclock','02:13'); set('#ldate','Minggu, 25 Oktober');
+  set('#wcalD','Minggu'); set('#wcalN','25'); set('#calm','MIN'); set('#cald','25');
+}
+
+function runChat(ch){
+  if(ch.running) return; ch.running=true; ch.started=true;
+  (async()=>{
+    if(ch.pos===0) addTo(ch,{sys:ch.day||TEXT.chatDay,clock:ch.dayClock||TEXT.statusTime});
+    const here=()=>curChat===ch;
+    while(ch.pos<ch.script.length){
+      const m=ch.script[ch.pos];
+      if(m.wait){ await until(()=>stage>=m.wait); await sleep(4000) }
+      if(m.pause){ await sleep(m.pause); ch.pos++; continue }
+      if(m.set){ flags[m.set]=true; ch.pos++; continue }
+      if(m.waitFor){ await until(()=>flags[m.waitFor]); await sleep(m.delay||2500); ch.pos++; continue }
+      if(m.hold){ await until(()=>ch.go); await sleep(m.delay||2500); ch.pos++; continue }
+      if(m.lamp){ await lampScene(); ch.pos++; continue }
+      if(m.call){ await sCall(ch.name); openChat(ch); await sleep(700); ch.pos++; continue }
+      if(m.next){ const nc=CHATS.find(c=>c.id===m.next); if(nc){ if(nc.running) nc.go=true; else setTimeout(()=>runChat(nc),m.delay||4500) } ch.pos++; continue }
+      if(m.cut){
+        await sleep(2500);
+        const cu=$('#cut'); cu.textContent=m.cut; cu.classList.add('on'); tone(60,2.8,'sine',.07);
+        cutSoundStart();
+        await sleep(1500);
+        setNight();
+        await sleep(1500);
+        cu.classList.remove('on');
+        cutSoundStop();
+        await sleep(1200);
+        ch.pos++; continue }
+      if(m.unlock!==undefined){
+        stage=Math.max(stage,m.unlock);
+        CHATS.forEach(c=>{ if(c!==ch && c.script.some(x=>x.wait===stage)) c.opened=false });
+        ch.pos++; continue }
+      if(m.end){ ch.pos++; await sleep(1500); curChat=null; setComposer(''); kbShow(false); CALL.enabled ? incomingCall(finale) : finale(); continue }
+      if(m.me!==undefined && !m.vid){
+        if(m.nudge && !here() && !ch.nudged){ ch.nudged=true; ch.opened=false; ch.last=m.nudge; ch.ts=Date.now(); notify(ch,{t:m.nudge}); updBadge(); if(scr==='clist') renderList() }
+        await until(here); await sleep(600);
+        let ok=false;
+        while(!ok){ await until(here); ok=await typeIn(m.me,here); if(!ok){ kbShow(false); setComposer('') } }
+        ch.pending=m.me; setComposer(m.me);
+        await new Promise(r=>{ ch.release=r });
+      } else if(m.sys){ await sleep(500); addTo(ch,m) }
+      else {
+        if(!m.mine && !m.fast && here()) $('#csub').textContent=TEXT.typing;
+        await sleep(m.fast?260:900+Math.random()*700);
+        if(here()) $('#csub').textContent='';
+        addTo(ch,m);
+        if(m.mine) tone(1000,.06,'sine',.05);
+        if(!m.mine){
+          if(here()){ blip(); buzz(40) }
+          else { ch.opened=false; notify(ch,m); updBadge(); if(scr==='clist') renderList() }
+        }
+        await sleep(m.fast?140:450);
+      }
+      ch.pos++;
+    }
+  })();
+}
+$('#csend').onclick=()=>{
+  const ch=curChat; if(!ch||!ch.pending) return;
+  addTo(ch,{me:ch.pending}); tone(1000,.06,'sine',.05); ch.pending=''; setComposer(''); kbShow(false);
+  const r=ch.release; ch.release=null; r&&r();
+};
+function renderList(){
+  const rows=$('#rows'); rows.innerHTML='';
+  visible().slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).forEach(ch=>{
+    const r=document.createElement('div'); r.className='row';
+    const prev = ch.last || (ch.script.find(m=>m.t)||{}).t || '';
+    r.innerHTML='<div class="av2"></div><div class="rt"><b></b><p></p></div><div class="rm">'+(ch.opened?'':TEXT.rowTime)+(ch.opened?'':'<i class="ub"></i>')+'</div>';
+    r.querySelector('b').textContent=ch.name; r.querySelector('p').textContent=ch.opened?ch.last:prev;
+    setAv(r.querySelector('.av2'),ch.id,ch.group?'🪞':ch.name[0],ch.color); r.onclick=()=>openChat(ch); rows.append(r);
+  });
+  const b=$('#bdg'); if(b){ const n=unread(); b.textContent=n; b.style.display=n?'grid':'none' }
+}
+function openChat(ch){
+  curChat=ch; ch.opened=true;
+  CHATS.forEach(c=>c.el.classList.toggle('on',c===ch));
+  $('#cname').textContent=ch.name; setAv($('#cav'),ch.id,ch.group?'🪞':ch.name[0],ch.color); $('#csub').textContent='';
+  $('#cub').textContent=Math.max(0,unread()-0)||''; setComposer(ch.pending);
+  show('chat'); kbShow(!!ch.pending); setClock(ch.clockNow||TEXT.statusTime); $('#msgs').scrollTop=$('#msgs').scrollHeight; runChat(ch);
+}
+$('#cback').onclick=()=>{ curChat=null; setComposer(''); renderList(); show('clist') };
+
+/* ---------- scene ---------- */
+const cv = $('#cv'), c = cv.getContext('2d');
+const X = [70,140,220,290];
+const pose = t => { const s=Math.sin(t*4); return {l:.6+s*1.6, r:.6-s*1.6, leg:.22+Math.abs(Math.sin(t*2))*.22, bob:Math.abs(s)*4} };
+
+function fig(x,y,s,t,o){
+  o=o||{}; const p=pose(t); const by=y-p.bob*s, hip=by-38*s, sh=by-76*s;
+  c.save(); c.globalAlpha=(o.a!==undefined?o.a:1); c.strokeStyle=o.col||'#ddd'; c.lineWidth=(o.w||3)*s; c.lineCap='round';
+  c.beginPath();
+  c.moveTo(x,sh); c.lineTo(x,hip);
+  const arm=(dir,th)=>{ c.moveTo(x,sh+4*s); c.lineTo(x+dir*Math.sin(th)*30*s, sh+4*s+Math.cos(th)*30*s) };
+  arm(-1,p.l);
+  if(o.hold){ c.moveTo(x,sh+4*s); c.lineTo(x+10*s,sh-30*s) } else arm(1,p.r);
+  c.moveTo(x,hip); c.lineTo(x-Math.sin(p.leg)*36*s,hip+Math.cos(p.leg)*38*s);
+  c.moveTo(x,hip); c.lineTo(x+Math.sin(p.leg)*36*s,hip+Math.cos(p.leg)*38*s);
+  c.stroke();
+  const hx=x+(o.tilt||0)*s*9, hy=by-92*s+Math.abs(o.tilt||0)*s*2;
+  c.beginPath(); c.arc(hx,hy,11*s,0,7); c.fillStyle=o.head||'#0b0c10'; c.fill(); c.stroke();
+  if(o.hold){ c.fillStyle='#9fb8ff'; c.fillRect(x+10*s-4*s,sh-42*s,8*s,12*s) }
+  if(o.face){ c.fillStyle='#ddd'; c.beginPath(); c.arc(hx-4*s,hy,1.6*s,0,7); c.arc(hx+4*s,hy,1.6*s,0,7); c.fill() }
+  c.restore();
+}
+
+const V = [
+ {len:10, title:TEXT.videoTitles[0], flick:[[6.0,6.12]]},
+ {len:12, title:TEXT.videoTitles[1], flick:[[3.0,3.12],[9.5,9.62]]},
+ {len:14, title:TEXT.videoTitles[2], flick:[]}
+];
+let cur=0, t=0, playing=true, last=0, raf=0;
+
+function draw(){
+  const v=V[cur], W=360, H=480;
+  c.clearRect(0,0,W,H);
+  c.fillStyle='#14161c'; c.fillRect(0,0,W,H);
+  /* mirror */
+  const g=c.createLinearGradient(0,40,0,300); g.addColorStop(0,'#1a2b3a'); g.addColorStop(1,'#0e1822');
+  c.fillStyle=g; c.fillRect(16,40,328,262);
+  c.save(); c.beginPath(); c.rect(16,40,328,262); c.clip();
+  /* reflections */
+  const rc='#8fb4cc';
+  NAMES.forEach((n,i)=>{
+    let tt=t, o={col:rc,a:.75,w:2.6};
+    if(cur===0 && i===1) tt = t - Math.min(.7, t*.07);
+    if(cur===1 && i===2 && t>=7){ tt=7; o.face=true; o.head='#cfd8de'; if(t>=9) o.tilt=1.2 }
+    fig(X[i],286,.78,tt,o);
+  });
+  const myArmDown = cur===2 && t>=11;
+  fig(180,290,.7,t,{col:rc,a:.75,w:2.6,hold:!myArmDown});
+  /* ghost */
+  let gp=0;
+  if(cur===2 && t>=4) gp = Math.min(1,(t-4)/10);
+  if(gp>0){
+    const gx=335-gp*118, gs=.5+gp*.38, still=t>=12;
+    fig(gx,292,gs,still?12:t-.5,{col:'#f1f1f1',a:.35+gp*.6,w:3.4,head:'#000',tilt:still?-1.5:0});
+  }
+  v.flick.forEach(([a,b])=>{ if(t>=a&&t<b) fig(300,292,.55,t,{col:'#fff',a:.8,w:3.6,head:'#000'}) });
+  c.restore();
+  /* mirror frame, floor */
+  c.strokeStyle='#3a4150'; c.lineWidth=4; c.strokeRect(16,40,328,262);
+  c.fillStyle='#1b1812'; c.fillRect(0,302,W,178);
+  /* real members (keonho is behind the camera) */
+  NAMES.forEach((n,i)=> fig(X[i],440,1.15,t,{col:'#e4e4e4',w:3}));
+  /* grain */
+  c.fillStyle='rgba(255,255,255,.04)';
+  for(let i=0;i<60;i++) c.fillRect(Math.random()*W,Math.random()*H,2,1);
+  $('#rec').textContent = TEXT.rec+'  '+TEXT.recHour+':'+String(2+Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
+}
+
+function tick(ts){
+  const dt=Math.min(.05,(ts-last)/1000); last=ts;
+  if(playing){ t+=dt; if(t>=V[cur].len){ t=V[cur].len; draw(); finish(); return } }
+  draw(); sync();
+  raf=requestAnimationFrame(tick);
+}
+const fmt = s => Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+function sync(){ $('#sk').value = t/V[cur].len*1000; $('#tm').textContent = fmt(t)+' / '+fmt(V[cur].len) }
+
+function openVideo(i){
+  cur=i; t=0; playing=true; last=performance.now();
+  cv.classList.remove('zoom'); $('#pp').textContent='❚❚'; $('#vtitle').textContent=V[i].title;
+  show('player'); ac();
+  const rv=$('#rv');
+  if(REAL_VIDEOS[i]){
+    cv.style.display='none'; rv.style.display='block'; $('#rec').style.display='none';
+    rv.onerror=()=>{ rv.style.display='none'; cv.style.display='block'; $('#rec').style.display='block'; rv.removeAttribute('src'); if(i===2) startDrone(); cancelAnimationFrame(raf); raf=requestAnimationFrame(tick) };
+    rv.onended=()=>finish();
+    rv.src=REAL_VIDEOS[i]; rv.play().catch(()=>{}); cancelAnimationFrame(raf);
+    $('#sk').style.display='none'; $('#pp').style.display='none'; $('#tm').style.display='none';
+    return;
+  }
+  rv.pause(); rv.style.display='none'; cv.style.display='block'; $('#rec').style.display='block';
+  $('#sk').style.display=''; $('#pp').style.display=''; $('#tm').style.display='';
+  if(i===2) startDrone();
+  cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
+}
+function finish(){
+  cancelAnimationFrame(raf); stopDrone();
+  if(cur===2){ CALL.enabled ? incomingCall(finale) : finale(); return }
+  stage=cur+1; curChat=null; setComposer(''); renderList(); show('clist'); blip(); buzz([60,40,60]);
+}
+$('#back').onclick=()=>{ $('#rv').pause(); cancelAnimationFrame(raf); stopDrone(); show(curChat?'chat':'clist') };
+$('#pp').onclick=()=>{ playing=!playing; $('#pp').textContent=playing?'❚❚':'▶'; last=performance.now() };
+$('#sk').oninput=e=>{ t=e.target.value/1000*V[cur].len; playing=false; $('#pp').textContent='▶'; cancelAnimationFrame(raf); draw(); sync() };
+$('#sk').onchange=()=>{ cancelAnimationFrame(raf); last=performance.now(); raf=requestAnimationFrame(tick) };
+cv.onclick=e=>{ const r=cv.getBoundingClientRect(); cv.style.transformOrigin=((e.clientX-r.left)/r.width*100)+'% '+((e.clientY-r.top)/r.height*100)+'%'; cv.classList.toggle('zoom') };
+
+/* ---------- telepon hantu ---------- */
+let ringT=null, ringV=null, callT=[], callAudio=null, callDone=false;
+function staticBurst(){ const a=ac(); if(!a)return; const n=a.sampleRate*.18, b=a.createBuffer(1,n,a.sampleRate), d=b.getChannelData(0); for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*(1-i/n); const sr=a.createBufferSource(); sr.buffer=b; const g=a.createGain(); g.gain.value=.18; sr.connect(g).connect(a.destination); sr.start() }
+function stopRing(){ clearInterval(ringT); clearInterval(ringV); ringT=ringV=null }
+function incomingCall(done){
+  const C=$('#call'); callDone=false; callT=[];
+  C.classList.add('ring'); C.classList.remove('live'); $('#kacc').classList.remove('dis');
+  $('#kname').textContent=CALL.name; $('#kstate').textContent=CALL.incomingText; $('#kcap').textContent='';
+  $('#krejl').textContent=CALL.declineLabel; $('#kaccl').textContent=CALL.acceptLabel;
+  $('#kgrid').innerHTML=''; CALL.buttons.forEach(t=>{ const d=document.createElement('div'); d.textContent=t; $('#kgrid').append(d) });
+  show('call'); ac();
+  const notes=[659,784,988,784]; let i=0;
+  ringT=setInterval(()=>{ tone(notes[i%4],.24,'sine',.1); i++ },270);
+  const vib=()=>buzz([500,250,500]); vib(); ringV=setInterval(vib,2000);
+  let answered=false;
+  const end=()=>{
+    if(callDone) return; callDone=true; callT.forEach(clearTimeout); clearInterval(timer);
+    if(callAudio){ try{callAudio.pause()}catch(e){} callAudio=null }
+    stopDrone(); $('#kstate').textContent=CALL.endText; $('#kcap').textContent=''; buzz([150,60,150]); tone(220,.5,'sawtooth',.1);
+    setTimeout(done,1300);
+  };
+  let timer=null;
+  const answer=()=>{
+    if(answered) return; answered=true; stopRing(); callT.forEach(clearTimeout);
+    C.classList.remove('ring'); C.classList.add('live'); startDrone();
+    let sec=0; $('#kstate').textContent='00:00';
+    timer=setInterval(()=>{ sec++; $('#kstate').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0') },1000);
+    CALL.lines.forEach(([at,txt])=>callT.push(setTimeout(()=>{ if(callDone) return; $('#kcap').textContent=txt; staticBurst(); buzz(60) },at*1000)));
+    if(CALL.sound){ try{ callAudio=new Audio(CALL.sound); callAudio.onended=end; callAudio.onerror=()=>{ callAudio=null }; callAudio.play().catch(()=>{ callAudio=null }) }catch(e){} }
+    callT.push(setTimeout(end,CALL.duration*1000));
+  };
+  $('#kacc').onclick=answer;
+  $('#krej').onclick=()=>{ if(answered||!CALL.canDecline) return; stopRing(); $('#kstate').textContent=CALL.declinedText; buzz([300,100,300]); staticBurst(); callT.push(setTimeout(answer,1800)) };
+  $('#kendb').onclick=end;
+  callT.push(setTimeout(answer,CALL.ringSeconds*1000));
+}
+
+/* ---------- finale ---------- */
+let timers=[];
+const later=(f,ms)=>timers.push(setTimeout(f,ms));
+function finale(){
+  show('end'); const E=$('#end'), F=$('#face'), T=$('#endt'), JV=$('#jvid'), J=$('#jimg');
+  E.classList.remove('shake'); F.className=''; $('#fin').classList.remove('on'); T.textContent=''; J.style.display='none'; JV.style.display='none';
+
+  /* siapkan video dari awal supaya muncul mendadak tanpa jeda */
+  if(JUMPSCARE.video){ JV.onerror=()=>{}; JV.onended=null; JV.src=JUMPSCARE.video; JV.load() }
+
+  const showEnding=()=>{ stopDrone(); E.classList.remove('shake'); F.className=''; J.style.display='none'; JV.style.display='none'; try{JV.pause()}catch(e){}
+    $('#fh').textContent=ENDING_TITLE; $('#fp').textContent=ENDING_SUB; $('#fin').classList.add('on') };
+
+  /* cadangan kalau video tidak ada/gagal: wajah muncul mendadak + suara */
+  const classic=()=>{
+    JV.style.display='none'; E.classList.add('shake'); buzz([200,60,300]);
+    if(JUMPSCARE.img){ J.onload=()=>{ J.style.display='block' }; J.onerror=()=>{ F.classList.add('boom') }; J.src=JUMPSCARE.img } else F.classList.add('boom');
+    if(JUMPSCARE.sound){ try{ const a=new Audio(JUMPSCARE.sound); a.volume=1; a.onerror=scream; a.play().catch(scream) }catch(e){ scream() } } else scream();
+    later(showEnding,1700);
+  };
+
+  later(()=>T.textContent=FINALE_TEXT[0]||'',500);
+  later(()=>T.textContent=FINALE_TEXT[1]||'',3500);
+  later(()=>T.textContent=FINALE_TEXT[2]||'',6500);
+  later(()=>{ T.textContent=''; startDrone() },9500);      // layar hitam + dengung pelan
+  later(()=>{                                               // JUMPSCARE VIDEO
+    if(JUMPSCARE.video && JV.readyState>=2){
+      stopDrone(); buzz([250,60,350]);
+      JV.currentTime=0; JV.style.display='block'; JV.muted=false; JV.volume=1; JV.onended=showEnding;
+      JV.onerror=classic; const pr=JV.play(); if(pr&&pr.catch) pr.catch(classic);
+    } else classic();
+  },14500);
+}
+$('#again').onclick=()=>location.reload();
+
+/* ---------- passcode ---------- */
+let code='';
+['1','2','3','4','5','6','7','8','9','','0','⌫'].forEach(k=>{ const b=document.createElement('button'); b.textContent=k; if(!k)b.className='e'; b.onclick=()=>pkey(k); $('#keys').append(b) });
+const dotsUp=()=>$$('#dots i').forEach((e,i)=>e.classList.toggle('f',i<code.length));
+function pkey(k){
+  tone(600,.04,'square',.03); buzz(10);
+  if(k==='⌫') code=code.slice(0,-1); else if(code.length<4) code+=k;
+  dotsUp();
+  if(code.length===4){
+    if(code===PASSCODE) setTimeout(()=>{ code=''; dotsUp(); show('home'); startBg() },200);
+    else { $('#dots').classList.add('bad'); $('#ptitle').textContent=TEXT.passWrong; buzz(200);
+      setTimeout(()=>{ code=''; dotsUp(); $('#dots').classList.remove('bad'); $('#ptitle').textContent=TEXT.passTitle },600) }
+  }
+}
+$('#pcancel').onclick=()=>{ code=''; dotsUp(); show('lock') };
+
+/* ---------- home & apps ---------- */
+
+const ICONS={
+Pesan:'<svg viewBox="0 0 60 60"><path d="M30 12c-11.500 0-21 7.200-21 16.500 0 5.300 3.100 10 8 13-.4 3.200-2 6-4 7.800 4.500 0 8.500-1.800 11.200-4 1.900.4 3.900.6 5.800.6 11.500 0 21-7.200 21-16.500S41.500 12 30 12z" fill="#fff"/></svg>',
+Instagram:'<svg viewBox="0 0 60 60"><rect x="15" y="15" width="30" height="30" rx="9" fill="none" stroke="#fff" stroke-width="3"/><circle cx="30" cy="30" r="7" fill="none" stroke="#fff" stroke-width="3"/><circle cx="39" cy="21" r="2" fill="#fff"/></svg>',
+Notes:'<svg viewBox="0 0 60 60"><rect width="60" height="15" fill="#f5c518"/><path d="M0 27h60M0 37h60M0 47h60" stroke="#dcdcdc" stroke-width="1.500"/></svg>',
+Kalender:'<svg viewBox="0 0 60 60"><text id="calm" x="30" y="17" font-size="9.500" fill="#ff3b30" text-anchor="middle" font-weight="600">SAB</text><text id="cald" x="30" y="48" font-size="31" text-anchor="middle" fill="#111" font-weight="300">24</text></svg>',
+Maps:'<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#e6efe3"/><path d="M0 42L60 18" stroke="#fff" stroke-width="9"/><path d="M0 42L60 18" stroke="#f6d36b" stroke-width="3"/><circle cx="30" cy="26" r="9" fill="#ff3b30"/><circle cx="30" cy="26" r="3.500" fill="#fff"/></svg>',
+Files:'<svg viewBox="0 0 60 60"><path d="M12 21c0-2 1-3 3-3h9l4 4h17c2 0 3 1 3 3v17c0 2-1 3-3 3H15c-2 0-3-1-3-3z" fill="#fff"/></svg>',
+Kamera:'<svg viewBox="0 0 60 60"><rect x="22" y="14" width="16" height="8" rx="2" fill="#222"/><rect x="9" y="20" width="42" height="27" rx="6" fill="#222"/><circle cx="30" cy="33.500" r="9.500" fill="#555" stroke="#ddd" stroke-width="2"/></svg>',
+Jam:'<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="23" fill="#fff"/><path d="M30 13v17l10 6" stroke="#111" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+Cuaca:'<svg viewBox="0 0 60 60"><circle cx="23" cy="23" r="9" fill="#ffd34d"/><path d="M19 45a8 8 0 010-16 11 11 0 0121 3 7 7 0 011 13z" fill="#fff"/></svg>',
+Spotify:'<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="17" fill="none" stroke="#fff" stroke-width="3"/><path d="M26 22.500v15l12.500-7.500z" fill="#fff"/></svg>'};
+const COL={Pesan:'linear-gradient(#5ee66f,#1cb83a)',Instagram:'linear-gradient(45deg,#f9a03c,#e1306c,#833ab4)',Notes:'#fff',Kalender:'#fff',Maps:'linear-gradient(#7ed56f,#3f8fe0)',Files:'linear-gradient(#4aa8ff,#1c6fe0)',Cuaca:'linear-gradient(#4aa8ff,#2a6fd0)',Spotify:'linear-gradient(#ff3b3b,#c4001a)'};
+Object.assign(ICONS,{
+Foto:'<svg viewBox="0 0 60 60">'+[0,45,90,135,180,225,270,315].map(a=>'<ellipse cx="30" cy="17" rx="5.500" ry="9.500" fill="#fff" stroke="#c4daf0" stroke-width=".8" transform="rotate('+a+' 30 30)"/>').join('')+'<circle cx="30" cy="30" r="6" fill="#f7c948"/></svg>',
+Gmail:'<svg viewBox="0 0 60 60"><rect x="12" y="17" width="36" height="26" rx="5" fill="#fff"/><path d="M13 20l17 13 17-13" fill="none" stroke="#2d86f0" stroke-width="3" stroke-linejoin="round"/></svg>',
+X:'<svg viewBox="0 0 60 60"><path d="M17 15h8.500l17.500 30h-8.500z" fill="#fff"/><path d="M42 15L18 45" stroke="#fff" stroke-width="3"/></svg>',
+Pengaturan:'<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="14" fill="none" stroke="#4a4a50" stroke-width="7" stroke-dasharray="5.500 4"/><circle cx="30" cy="30" r="11" fill="#4a4a50"/><circle cx="30" cy="30" r="4.500" fill="#d4d4d9"/></svg>',
+Telepon:'<svg viewBox="0 0 24 24"><g transform="translate(4.800 4.800) scale(.6)"><path fill="#fff" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></g></svg>',
+Safari:'<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="21" fill="#fff" stroke="#2a8cf0" stroke-width="2.500"/><path d="M30 12v4M30 44v4M12 30h4M44 30h4" stroke="#2a8cf0" stroke-width="2"/><path d="M38 22L33 33l-6-6z" fill="#ff3b30"/><path d="M22 38l5-11 6 6z" fill="#d4d4d8"/></svg>'});
+Object.assign(COL,{Foto:'linear-gradient(#eaf4ff,#cfe3f8)',Gmail:'linear-gradient(#52b6ff,#1678f0)',X:'#000',Pengaturan:'linear-gradient(#dcdce1,#b3b3b9)',Kamera:'linear-gradient(#e6e6ea,#b9b9bf)',Jam:'#000',Telepon:'linear-gradient(#5ee66f,#1cb83a)',Safari:'linear-gradient(#fff,#e8eef5)'});
+Object.assign(INFO,{
+ Telepon:{t:'Telepon',items:[['Tidak terjawab','Unknown · 02:11'],['Tidak terjawab','Unknown · 02:09']]},
+ Safari:{t:'Safari',items:[['Riwayat','kenapa bayangan gerak duluan'],['Riwayat','cara menutup cermin ruang latihan']]},
+ X:{t:'X',items:[['Untuk kamu','Fans: ruang latihan B di video tadi kok ada yang aneh ya?']]}
+});
+Object.assign(TEXT.apps,{Gmail:'Mail',Telepon:'Telepon',Safari:'Safari',X:'X'});
+const APPS=[['Foto','🖼️','photos'],['Gmail','✉️','info','Gmail',3],['Kalender','📅','info','Kalender'],['Notes','📝','info','Notes'],['X','✖️','info','X'],['Pengaturan','⚙️','info','Pengaturan'],['Kamera','📸','info','Kamera'],['Jam','⏰','info','Jam'],['Instagram','📷','insta'],['Maps','📍','info','Maps'],['Files','📁','info','Files'],['Telepon','📞','info','Telepon'],['Safari','🧭','info','Safari'],['Pesan','💬','chat',1],['Spotify','🎵','music']];
+const DOCK=['Telepon','Safari','Pesan','Spotify'];
+const ENABLED=['Pesan','Foto','Instagram','Spotify'];   // app yang bisa dibuka, sisanya cuma pajangan
+APPS.forEach(([n,e,go,x,bg])=>{ const b=document.createElement('button'); b.className='app'; b.innerHTML='<div class="ic" style="background:'+(COL[n]||'')+'">'+(ICONS[n]||e)+'</div>'+(TEXT.apps[n]||n)+(go==='chat'?'<span class="bdg" id="bdg">1</span>':(bg?'<span class="bdg">'+bg+'</span>':'')); b.onclick=()=>{ if(ENABLED.includes(n)) openApp(go,x) }; (DOCK.includes(n)?$('#dock'):$('#apps')).append(b) });
+$$('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));
+
+function openApp(go,x){
+  tone(500,.05,'sine',.04);
+  if(go==='chat'){ renderList(); show('clist') }
+  else if(go==='music'){ renderMusic(); show('music') }
+  else if(go==='info'){ const d=INFO[x]; $('#ititle').textContent=d.t; $('#ibody').innerHTML=''; d.items.forEach(([a,b])=>{ const e=document.createElement('div'); e.className='it'; const sm=document.createElement('small'); sm.textContent=a; e.append(sm,document.createTextNode(b)); $('#ibody').append(e) }); show('info') }
+  else { show(go); }
+}
+
+/* ---------- galeri & instagram ---------- */
+const upPhotos=[], upIG=[];
+const phP=n=>Array.from({length:n},(_,i)=>'ph:IMG_'+(410+i*3));
+function renderGrid(el,list,ph){
+  el.innerHTML='';
+  (list.length?list:ph).forEach((src,i)=>{
+    const d=document.createElement('div'); d.className='cell';
+    if(src.startsWith('ph:')){ d.style.background='hsl('+(i*47%360)+' 14% 14%)'; d.textContent=src.slice(3) }
+    else { d.style.backgroundImage='url("'+src+'")'; const tt=new Image(); tt.onerror=()=>{ d.textContent='tidak ketemu: '+src }; tt.src=src; }
+    d.onclick=()=>viewImg(src); el.append(d);
+  });
+}
+function viewImg(src){
+  const v=$('#viewer'); v.innerHTML='';
+  if(src.startsWith('ph:')) v.textContent=TEXT.emptyPhoto;
+  else { const i=document.createElement('img'); i.src=src; v.append(i) }
+  v.classList.add('on'); v.onclick=()=>v.classList.remove('on');
+}
+const phList=()=>[...upPhotos,...PHOTOS], igList=()=>[...upIG,...IG.posts];
+function renderAll(){
+  renderGrid($('#pgrid'),phList(),phP(12));
+  renderGrid($('#igrid'),igList(),phP(6));
+  $('#ipc').textContent=igList().length||6;
+}
+$('#iuser').textContent=IG.user; $('#iname').textContent=IG.name+' '; $('#ibio').textContent=IG.bio; $('#ifo').textContent=IG.followers; $('#ifg').textContent=IG.following;
+let pickTo=null;
+$('#padd').onclick=()=>{ pickTo=upPhotos; $('#fpick').click() };
+$('#iadd').onclick=()=>{ pickTo=upIG; $('#fpick').click() };
+$('#fpick').onchange=e=>{ [...e.target.files].forEach(f=>pickTo.unshift(URL.createObjectURL(f))); e.target.value=''; renderAll() };
+renderAll(); renderList();
+
+setAv($('#ipfp'),'ig','🪞','#222');
+$('#hbar').onclick=()=>{ if(!$('#hbar').classList.contains('act')) return; curChat=null; setComposer(''); renderList(); show('home') };
+let ty=null; $('#hbar').ontouchstart=e=>{ ty=e.touches[0].clientY }; $('#hbar').ontouchend=e=>{ if(ty!==null && ty-e.changedTouches[0].clientY>25) $('#hbar').onclick(); ty=null };
+
+/* ---------- terapkan TEXT ke layar ---------- */
+(function(){
+  const set=(q,t)=>{ const e=$(q); if(e&&t!==undefined) e.textContent=t };
+  set('#lclock',TEXT.clock); set('#ldate',TEXT.date); set('#nt',TEXT.notifTitle); set('#nb',TEXT.notifBody); set('#lswipe',TEXT.swipeHint);
+  set('#ptitle',TEXT.passTitle); set('#pemerg',TEXT.passEmergency); set('#pcancel',TEXT.passCancel);
+  set('#ledit',TEXT.listEdit); set('#ltitle',TEXT.listTitle); set('#lsearch',TEXT.listSearch);
+  set('#tphotos',TEXT.photosTitle); set('#phint',TEXT.playerHint); set('#again',TEXT.again);
+  $('#cin').placeholder=TEXT.inputPlaceholder; $$('.bl').forEach(e=>e.textContent=TEXT.back);
+})();
+
+/* ---------- emoji Apple + error banner ---------- */
+window.__ok=true; window.addEventListener('error',e=>{ const b=$('#errb'); b.style.display='block'; b.textContent='Error: '+e.message });
+let EMO_RE=null; try{ EMO_RE=new RegExp('\\p{Extended_Pictographic}\\uFE0F?(?:\\u200D\\p{Extended_Pictographic}\\uFE0F?)*','gu') }catch(e){}
+const EMO_BASE='https://cdn.jsdelivr.net/npm/emoji-datasource-apple@15.0.1/img/apple/64/';
+function emoImg(str){
+  const cps=[...str].map(ch=>ch.codePointAt(0).toString(16)).filter(x=>x!=='fe0f');
+  const cand=[cps.join('-'), cps[0]+'-fe0f'+(cps.length>1?'-'+cps.slice(1).join('-'):'')];
+  const im=document.createElement('img'); im.className='emo'; im.alt=str; let i=0;
+  im.onerror=()=>{ i++; if(i<cand.length) im.src=EMO_BASE+cand[i]+'.png'; else { const sp=document.createElement('span'); sp.dataset.noemo='1'; sp.textContent=str; im.replaceWith(sp) } };
+  im.src=EMO_BASE+cand[0]+'.png'; return im;
+}
+function emojify(root){
+  if(!EMO_RE) return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{ const p=n.parentNode; if(!p||['SCRIPT','STYLE','TEXTAREA','INPUT'].includes(p.nodeName)||(p.closest&&p.closest('[data-noemo]'))) return NodeFilter.FILTER_REJECT; EMO_RE.lastIndex=0; return EMO_RE.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT }});
+  const list=[]; while(w.nextNode()) list.push(w.currentNode);
+  list.forEach(n=>{
+    const t=n.nodeValue, frag=document.createDocumentFragment(); let last=0; EMO_RE.lastIndex=0; let m;
+    while((m=EMO_RE.exec(t))){
+      const cp=m[0].codePointAt(0), ok = m[0].includes('\uFE0F') || cp>=0x1F000 || cp===0x23F0 || cp===0x26C5;
+      frag.append(document.createTextNode(t.slice(last,m.index)));
+      if(ok) frag.append(emoImg(m[0])); else { const sp=document.createElement('span'); sp.dataset.noemo='1'; sp.textContent=m[0]; frag.append(sp) }
+      last=m.index+m[0].length;
+    }
+    frag.append(document.createTextNode(t.slice(last))); n.replaceWith(frag);
+  });
+}
+if(typeof MutationObserver!=='undefined'){ new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{ if(n.nodeType===1) emojify(n); else if(n.nodeType===3&&n.parentNode) emojify(n.parentNode) }))).observe($('#phone'),{childList:true,subtree:true}) }
+emojify($('#phone'));
+
+/* ---------- wallpaper ---------- */
+(function(){
+  const wp=(src)=>'linear-gradient(rgba(0,0,0,.25),rgba(0,0,0,.45)),url("'+src+'") center/cover no-repeat';
+  if(WALLPAPER.lock) ['lock','pass'].forEach(id=>{ $('#'+id).style.background=wp(WALLPAPER.lock) });
+  if(WALLPAPER.home) $('#home').style.background=wp(WALLPAPER.home);
+})();
+
+/* ---------- start ---------- */
+$('#notif').onclick=()=>{ ac(); show('pass') };
+</script>
+</body>
+</html>
